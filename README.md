@@ -5,7 +5,7 @@
 
 - 👨‍💻 All of my projects are available at [https://www.linkedin.com/in/md-shahid-iqbal-91b03b240/](https://www.linkedin.com/in/md-shahid-iqbal-91b03b240/)
 
-- 💬 Ask me about **Reactjs,React Native,DSA**
+- 💬 Ask me about **Full stack Development,Automation testing**
 
 - 📫 How to reach me **iqbalmdshahid147@gmail.com**
 
