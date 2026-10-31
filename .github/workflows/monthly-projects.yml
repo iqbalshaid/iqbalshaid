@@ -9,6 +9,7 @@ on:
     paths:
       - "scripts/**"
       - "descriptions.json"
+      - "tools.json"
       - ".github/workflows/monthly-projects.yml"
 
 permissions:

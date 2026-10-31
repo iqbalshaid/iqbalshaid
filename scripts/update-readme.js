@@ -4,6 +4,7 @@
 //   ASK      -> "Ask me about" line built from the same detection
 // Runs inside GitHub Actions (see .github/workflows/monthly-projects.yml).
 // Custom project descriptions go in descriptions.json: { "owner/repo": "description" }
+// Tools to always show go in tools.json: { "always": ["aws", "langgraph", ...] } (ids from SKILLS / BADGES)
 const fs = require("fs");
 
 const token = process.env.GH_TOKEN;
@@ -13,7 +14,9 @@ const TOP = 3;
 const MAX_MESSAGES = 5;
 const MAX_TOOLS = 16;
 const EXCLUDE = [`${login}/${login}`]; // the profile repo itself
-const descriptions = fs.existsSync("descriptions.json") ? JSON.parse(fs.readFileSync("descriptions.json", "utf8")) : {};
+const readJson = (f, fallback) => (fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, "utf8")) : fallback);
+const descriptions = readJson("descriptions.json", {});
+const ALWAYS = readJson("tools.json", {}).always || [];
 
 // skillicons.dev id -> display name
 const SKILLS = {
@@ -23,8 +26,22 @@ const SKILLS = {
   mongodb: "MongoDB", postgres: "PostgreSQL", mysql: "MySQL", redis: "Redis", prisma: "Prisma", supabase: "Supabase",
   firebase: "Firebase", tailwind: "Tailwind", redux: "Redux", vite: "Vite", graphql: "GraphQL", jest: "Jest",
   fastapi: "FastAPI", django: "Django", flask: "Flask", tensorflow: "TensorFlow", pytorch: "PyTorch",
-  sklearn: "scikit-learn", opencv: "OpenCV", docker: "Docker", githubactions: "GitHub Actions",
+  sklearn: "scikit-learn", opencv: "OpenCV", docker: "Docker", githubactions: "GitHub Actions", aws: "AWS",
 };
+// Tools skillicons.dev has no icon for -> shields.io badge: [name, color, simple-icons logo, logo color]
+const BADGES = {
+  langgraph: ["LangGraph", "1C3C3C", "langchain"], langchain: ["LangChain", "1C3C3C", "langchain"],
+  llamaindex: ["LlamaIndex", "000000"], openai: ["OpenAI", "412991", "openai"], anthropic: ["Claude", "D97757", "anthropic"],
+  gemini: ["Gemini", "8E75B2", "googlegemini"], groq: ["Groq", "F55036"], ollama: ["Ollama", "000000", "ollama"],
+  huggingface: ["Hugging Face", "FFD21E", "huggingface", "black"], chromadb: ["ChromaDB", "FF6446"],
+  pinecone: ["Pinecone", "000000"], qdrant: ["Qdrant", "DC244C"], faiss: ["FAISS", "0467DF"],
+  opentelemetry: ["OpenTelemetry", "425CC7", "opentelemetry"], grafana: ["Grafana", "F46800", "grafana"],
+  prometheus: ["Prometheus", "E6522C", "prometheus"], sentry: ["Sentry", "362D59", "sentry"],
+  swagger: ["Swagger", "85EA2D", "swagger", "black"],
+};
+const AI_TOOLS = ["langgraph", "langchain", "llamaindex", "openai", "anthropic", "gemini", "groq", "ollama", "huggingface", "chromadb", "pinecone", "qdrant", "faiss"];
+const MONITORING = ["opentelemetry", "grafana", "prometheus", "sentry"];
+const nameOf = (id) => SKILLS[id] || (BADGES[id] && BADGES[id][0]) || id;
 const LANGS = {
   Python: "py", TypeScript: "ts", JavaScript: "js", HTML: "html", CSS: "css", SCSS: "sass", Shell: "bash",
   Dockerfile: "docker", Java: "java", C: "c", "C++": "cpp", Go: "go", Kotlin: "kotlin", Dart: "dart",
@@ -40,9 +57,28 @@ const DEPS = {
   vite: "vite", graphql: "graphql", jest: "jest", sass: "sass",
   fastapi: "fastapi", django: "django", flask: "flask", tensorflow: "tensorflow", torch: "pytorch",
   "scikit-learn": "sklearn", "opencv-python": "opencv",
+  boto3: "aws", "aws-sdk": "aws", "aws-cdk-lib": "aws", openai: "openai", anthropic: "anthropic",
+  "@anthropic-ai/sdk": "anthropic", "google-generativeai": "gemini", "google-genai": "gemini",
+  "@google/generative-ai": "gemini", groq: "groq", "groq-sdk": "groq", ollama: "ollama",
+  transformers: "huggingface", "huggingface-hub": "huggingface", chromadb: "chromadb",
+  pinecone: "pinecone", "pinecone-client": "pinecone", "@pinecone-database/pinecone": "pinecone",
+  "qdrant-client": "qdrant", "@qdrant/js-client-rest": "qdrant", "faiss-cpu": "faiss", "faiss-gpu": "faiss",
+  "prometheus-client": "prometheus", "prom-client": "prometheus", "sentry-sdk": "sentry",
+  "swagger-ui-express": "swagger", "swagger-jsdoc": "swagger", "@nestjs/swagger": "swagger",
+  "drf-yasg": "swagger", "drf-spectacular": "swagger", flasgger: "swagger",
 };
+// Dependency families matched by prefix
+const DEP_RULES = [
+  [/^(langgraph|@langchain\/langgraph)/, "langgraph"], [/^(langchain|@langchain\/)/, "langchain"],
+  [/^(llama-index|llamaindex)/, "llamaindex"], [/^(@aws-sdk\/|@aws-cdk\/)/, "aws"],
+  [/^(opentelemetry-|@opentelemetry\/)/, "opentelemetry"], [/^@sentry\//, "sentry"],
+];
+// Services spotted in docker-compose / k8s / CI files
+const FILE_RULES = [
+  [/grafana/i, "grafana"], [/prometheus/i, "prometheus"], [/opentelemetry|otel-collector|otel\/|OTEL_/i, "opentelemetry"],
+  [/chromadb|chroma:/i, "chromadb"], [/aws-actions\/|amazonaws\.com|AWS_ACCESS_KEY/i, "aws"],
+];
 const NODE_BACKEND = ["express", "nestjs"];
-const AI_DEPS = /^(openai|anthropic|@anthropic-ai\/sdk|langchain.*|@langchain\/.*|llama-index.*|transformers|google-generativeai|@google\/generative-ai|groq|ollama|litellm|crewai)$/i;
 
 async function gh(path, opts = {}, accept = "application/vnd.github+json") {
   const res = await fetch(`https://api.github.com${path}`, {
@@ -90,26 +126,34 @@ async function workDone(repo, from, to) {
   return [...new Set(messages)];
 }
 
-// Skills used in one repo: languages + dependencies + Docker/CI files
+// Skills used in one repo: languages + dependencies + Docker/CI/infra files
 async function detectSkills(r) {
   const skills = new Set();
-  let ai = false;
   for (const { size, node } of r.languages.edges) {
     if (LANGS[node.name] && size / r.languages.totalSize >= 0.05) skills.add(LANGS[node.name]);
   }
 
   const branch = r.defaultBranchRef && r.defaultBranchRef.name;
   const tree = branch && (await tryGh(`/repos/${r.nameWithOwner}/git/trees/${branch}?recursive=1`));
-  if (!tree) return { skills, ai };
+  if (!tree) return skills;
   const paths = tree.tree.map((t) => t.path).filter((p) => !p.includes("node_modules/"));
 
   if (paths.some((p) => /(^|\/)(Dockerfile|docker-compose\.ya?ml|compose\.ya?ml)$/.test(p))) skills.add("docker");
   if (paths.some((p) => p.startsWith(".github/workflows/"))) skills.add("githubactions");
+  if (paths.some((p) => /(^|\/)(cdk\.json|serverless\.ya?ml|samconfig\.toml)$/.test(p))) skills.add("aws");
+  for (const p of paths) for (const [re, id] of FILE_RULES.slice(0, 3)) if (re.test(p)) skills.add(id);
 
-  const depFiles = paths.filter((p) => /(^|\/)(package\.json|requirements[^/]*\.txt|pyproject\.toml)$/.test(p)).slice(0, 6);
-  for (const p of depFiles) {
+  const depFiles = paths.filter((p) => /(^|\/)(package\.json|requirements[^/]*\.txt|pyproject\.toml)$/.test(p)).slice(0, 8);
+  const infraFiles = paths
+    .filter((p) => /(^|\/)(docker-compose[^/]*\.ya?ml|compose\.ya?ml)$/.test(p) || p.startsWith(".github/workflows/"))
+    .slice(0, 6);
+  for (const p of [...depFiles, ...infraFiles]) {
     const text = await tryGh(`/repos/${r.nameWithOwner}/contents/${p}?ref=${branch}`, {}, "application/vnd.github.raw+json");
     if (!text) continue;
+    if (infraFiles.includes(p)) {
+      for (const [re, id] of FILE_RULES) if (re.test(text)) skills.add(id);
+      continue;
+    }
     let deps = [];
     if (p.endsWith("package.json")) {
       try {
@@ -117,16 +161,22 @@ async function detectSkills(r) {
         deps = Object.keys({ ...pkg.dependencies, ...pkg.devDependencies });
       } catch {}
     } else {
-      deps = [...text.matchAll(/^\s*"?([A-Za-z0-9_.\-]+)/gm)].map((m) => m[1].toLowerCase());
+      deps = [...text.matchAll(/^\s*"?([A-Za-z0-9_.\-@\/]+)/gm)].map((m) => m[1].toLowerCase().replace(/_/g, "-"));
     }
     for (const d of deps) {
       if (DEPS[d]) skills.add(DEPS[d]);
-      if (AI_DEPS.test(d)) ai = true;
+      for (const [re, id] of DEP_RULES) if (re.test(d)) skills.add(id);
     }
   }
   if (NODE_BACKEND.some((s) => skills.has(s))) skills.add("nodejs");
-  return { skills, ai };
+  return skills;
 }
+
+const badge = (id) => {
+  const [name, color, logo, logoColor = "white"] = BADGES[id];
+  const label = encodeURIComponent(name.replace(/-/g, "--").replace(/_/g, "__"));
+  return `<img src="https://img.shields.io/badge/${label}-${color}?style=for-the-badge${logo ? `&logo=${logo}&logoColor=${logoColor}` : ""}" alt="${name}" />`;
+};
 
 const repoName = (r) => (r.isPrivate ? `🔒 **${r.nameWithOwner}**` : `**[${r.nameWithOwner}](${r.url})**`);
 
@@ -195,26 +245,33 @@ async function main() {
 
   // ---- TOOLS + ASK: skills weighted by commits in each repo ----
   const score = new Map();
-  let ai = false;
   for (const t of ranked) {
-    const found = await detectSkills(t.r);
-    ai = ai || found.ai;
-    for (const s of found.skills) score.set(s, (score.get(s) || 0) + t.count);
+    for (const s of await detectSkills(t.r)) score.set(s, (score.get(s) || 0) + t.count);
   }
-  const skills = [...score.entries()].sort((a, b) => b[1] - a[1]).map(([s]) => s).slice(0, MAX_TOOLS);
+  for (const s of ALWAYS) if (!score.has(s) && (SKILLS[s] || BADGES[s])) score.set(s, 0);
+  const all = [...score.entries()].sort((a, b) => b[1] - a[1]).map(([s]) => s);
+  const icons = all.filter((s) => SKILLS[s]).slice(0, MAX_TOOLS);
+  const badges = all.filter((s) => BADGES[s]);
 
   let readme = fs.readFileSync("README.md", "utf8");
   readme = replaceBlock(readme, "PROJECTS", md);
 
   // Keep the previous tools/ask text if nothing could be detected
-  if (skills.length) {
-    const tools =
-      `\n<h3 align="left">Languages and Tools:</h3>\n` +
-      `<p align="left"><img src="https://skillicons.dev/icons?i=${skills.join(",")}&perline=12" alt="${skills.map((s) => SKILLS[s]).join(", ")}" /></p>\n\n` +
-      `<sub>Based on what I've used in the last ${MONTHS} months</sub>\n`;
+  if (all.length) {
+    let tools = `\n<h3 align="left">Languages and Tools:</h3>\n`;
+    if (icons.length) tools += `<p align="left"><img src="https://skillicons.dev/icons?i=${icons.join(",")}&perline=12" alt="${icons.map(nameOf).join(", ")}" /></p>\n\n`;
+    const aiBadges = badges.filter((s) => AI_TOOLS.includes(s));
+    const otherBadges = badges.filter((s) => !AI_TOOLS.includes(s));
+    if (aiBadges.length) tools += `<p align="left"><b>AI &amp; LLM:</b><br/>\n${aiBadges.map(badge).join("\n")}\n</p>\n\n`;
+    if (otherBadges.length) tools += `<p align="left"><b>Monitoring &amp; APIs:</b><br/>\n${otherBadges.map(badge).join("\n")}\n</p>\n\n`;
+    tools += `<sub>Based on what I've used in the last ${MONTHS} months</sub>\n`;
     readme = replaceBlock(readme, "TOOLS", tools);
 
-    const areas = [...(ai ? ["AI / LLM Apps"] : []), ...skills.slice(0, 5).map((s) => SKILLS[s])];
+    const areas = [
+      ...(all.some((s) => AI_TOOLS.includes(s)) ? ["AI / LLM Apps"] : []),
+      ...(all.some((s) => MONITORING.includes(s)) ? ["Monitoring & Observability"] : []),
+      ...all.filter((s) => score.get(s) > 0 && !AI_TOOLS.includes(s) && !MONITORING.includes(s)).slice(0, 4).map(nameOf),
+    ];
     readme = replaceBlock(readme, "ASK", `**${areas.join(", ")}**`);
   }
 

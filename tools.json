@@ -1,0 +1,3 @@
+{
+  "always": ["aws", "langgraph", "chromadb", "opentelemetry", "swagger", "grafana"]
+}
