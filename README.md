@@ -30,12 +30,7 @@ _Where I've committed the most in the last 3 months · auto-updated on 2026-10-3
 
 `TypeScript` · 32 commits · Active: Sep, Oct
 
-**Recent work:**
-- scot report system attach in autorocket product
-- changes in order 2 dispatch edit order form
-- changes in order 2 dispatch order form edit changes in item
-- changes in production planning
-- Revert "changes in poduction planning"
+**Worked on:** Production Planning · Settings · Order to Dispatch · Lead to Order · Checklist & Delegation · Profile
 
 ### 🥈 🔒 **botivate-os/backend_botivate_os**
 
@@ -43,25 +38,13 @@ _Where I've committed the most in the last 3 months · auto-updated on 2026-10-3
 
 `TypeScript` · 26 commits · Active: Sep, Oct
 
-**Recent work:**
-- scot report system attach in autorocket product
-- changes in order 2 dispatch edit order form
-- changes in dashboard of autorocket where mis score and monthly performance showing wrong way
-- changes in order 2 dispatch order form edit changes in item
-- changes in production planning
+**Worked on:** Order to Dispatch · Production Planning · Permissions · Lead to Order · Inventory · WhatsApp
 
 ### 🥉 🔒 **iqbalshaid/BusinessAnalyzer_Backend**
 
 > Backend for an AI-powered business analyzer — Python LLM pipeline with containerized deployment.
 
 `Python` · 19 commits · Active: Sep, Oct
-
-**Recent work:**
-- something changes
-- Set GHCR_OWNER for dev deploy
-- Add comments to llm.py
-- yml changes
-- Update development environment variables
 
 ## 🚀 What I've Been Working On
 
