@@ -28,7 +28,9 @@ _Where I've committed the most in the last 3 months · auto-updated on 2026-10-3
 
 > Botivate OS frontend — HR & operations platform covering employees, attendance, leave, assets, designations and dashboards.
 
-`TypeScript` · 32 commits · Active: Sep, Oct
+32 commits · Active: Sep, Oct
+
+**Tech:** _TypeScript, JavaScript, Docker, Redux, Next.js, React, Tailwind_
 
 **Worked on:** Production Planning · Settings · Order to Dispatch · Lead to Order · Checklist & Delegation · Profile
 
@@ -36,7 +38,9 @@ _Where I've committed the most in the last 3 months · auto-updated on 2026-10-3
 
 > Botivate OS backend — APIs for employees, attendance, leave, assets and designations.
 
-`TypeScript` · 26 commits · Active: Sep, Oct
+26 commits · Active: Sep, Oct
+
+**Tech:** _TypeScript, HTML, Docker, GitHub Actions, AWS, Prisma, Express, Redis, PostgreSQL, Node.js_
 
 **Worked on:** Order to Dispatch · Production Planning · Permissions · Lead to Order · Inventory · WhatsApp
 
@@ -44,7 +48,9 @@ _Where I've committed the most in the last 3 months · auto-updated on 2026-10-3
 
 > Backend for an AI-powered business analyzer — Python LLM pipeline with containerized deployment.
 
-`Python` · 19 commits · Active: Sep, Oct
+19 commits · Active: Sep, Oct
+
+**Tech:** _Python, Docker, GitHub Actions, FastAPI, MySQL, LangGraph, LangChain_
 
 **Worked on:** API · Home · Session Detail · Workflow · Auth · Error Display
 
