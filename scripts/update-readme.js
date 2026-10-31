@@ -11,7 +11,7 @@ const token = process.env.GH_TOKEN;
 const login = process.env.GH_LOGIN;
 const MONTHS = 3;
 const TOP = 3;
-const MAX_MESSAGES = 5;
+const MAX_MODULES = 6;
 const MAX_TOOLS = 16;
 const EXCLUDE = [`${login}/${login}`]; // the profile repo itself
 const readJson = (f, fallback) => (fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, "utf8")) : fallback);
@@ -114,16 +114,56 @@ async function reposForMonth(from, to) {
   );
 }
 
-// Meaningful commit subjects only: skip merges, auto-push commits and one-word messages like "local"
+// Feature/module folder right after one of these, e.g. src/features/order2dispatch/... -> "Order to Dispatch"
+const MODULE_PARENTS = /^(features|modules|services|controllers|routes|repositories|validators|pages|apps|api|routers|views|screens|agents|tools|pipelines)$/i;
+const SKIP_MODULES = /^(_.*|\(.*\)|\[.*\]|components?|server|client|utils?|helpers?|common|shared|lib|core|config|types|hooks|styles|assets|tests?|__tests__|index|v\d+)$/i;
+const MODULE_NAMES = {
+  scotreport: "SCOT Report", whatsapp: "WhatsApp", llm: "LLM", api: "API", auth: "Auth", mis: "MIS", hr: "HR",
+  sfms: "SFMS", hrfms: "HR FMS", storefms: "Store FMS", maintenancepro: "Maintenance Pro", momsystem: "MOM System",
+  eadashboard: "EA Dashboard", checklistdelegation: "Checklist & Delegation",
+};
+
+const moduleKey = (seg) =>
+  seg.replace(/([a-z])2([a-z])/gi, "$1to$2").replace(/[^a-z0-9]/gi, "").toLowerCase().replace("deligation", "delegation");
+const moduleLabel = (seg) =>
+  MODULE_NAMES[moduleKey(seg)] ||
+  seg
+    .replace(/([a-z])2([a-z])/gi, "$1 to $2")
+    .replace(/([a-z])([A-Z])/g, "$1 $2")
+    .replace(/[-_]+/g, " ")
+    .split(" ")
+    .map((w, i) => (i > 0 && /^(to|and|of|for|in)$/i.test(w) ? w.toLowerCase() : w.charAt(0).toUpperCase() + w.slice(1)))
+    .join(" ");
+
+function modulesOf(path) {
+  const parts = path.split("/");
+  const found = new Set();
+  for (let i = 0; i < parts.length - 2; i++) {
+    const seg = parts[i + 1];
+    if (MODULE_PARENTS.test(parts[i]) && !seg.includes(".") && !SKIP_MODULES.test(seg)) found.add(seg);
+  }
+  return found;
+}
+
+// Modules touched by my (non-merge) commits in a repo: key -> { label, commits }
 async function workDone(repo, from, to) {
   const commits = await gh(
     `/repos/${repo}/commits?author=${login}&since=${from.toISOString()}&until=${to.toISOString()}&per_page=100`
   );
-  const messages = commits
-    .map((c) => c.commit.message.split("\n")[0].trim())
-    .filter((m) => m.length >= 8 && m.split(/\s+/).length >= 2)
-    .filter((m) => !/^Merge /i.test(m) && !/^Auto update/i.test(m));
-  return [...new Set(messages)];
+  const modules = new Map();
+  for (const c of commits) {
+    if (c.parents && c.parents.length > 1) continue;
+    const detail = await tryGh(`/repos/${repo}/commits/${c.sha}`);
+    if (!detail || !detail.files) continue;
+    const touched = new Map();
+    for (const f of detail.files) for (const seg of modulesOf(f.filename)) touched.set(moduleKey(seg), seg);
+    for (const [key, seg] of touched) {
+      const m = modules.get(key) || { label: moduleLabel(seg), commits: 0 };
+      m.commits += 1;
+      modules.set(key, m);
+    }
+  }
+  return modules;
 }
 
 // Skills used in one repo: languages + dependencies + Docker/CI/infra files
@@ -200,18 +240,22 @@ async function main() {
     const label = from.toLocaleString("en-US", { month: "long", year: "numeric", timeZone: "UTC" });
     const short = from.toLocaleString("en-US", { month: "short", timeZone: "UTC" });
     const repos = await reposForMonth(from, to);
-    for (const c of repos) c.messages = await workDone(c.repository.nameWithOwner, from, to);
+    for (const c of repos) c.modules = await workDone(c.repository.nameWithOwner, from, to);
     if (repos.length) months.push({ label, short, repos });
   }
 
   // Totals per project across all months
   const totals = new Map();
   for (const { short, repos } of months) {
-    for (const { repository: r, contributions, messages } of repos) {
-      const t = totals.get(r.nameWithOwner) || { r, count: 0, months: [], messages: [] };
+    for (const { repository: r, contributions, modules } of repos) {
+      const t = totals.get(r.nameWithOwner) || { r, count: 0, months: [], modules: new Map() };
       t.count += contributions.totalCount;
       t.months.push(short);
-      t.messages.push(...messages);
+      for (const [key, m] of modules) {
+        const prev = t.modules.get(key) || { label: m.label, commits: 0 };
+        prev.commits += m.commits;
+        t.modules.set(key, prev);
+      }
       totals.set(r.nameWithOwner, t);
     }
   }
@@ -230,8 +274,8 @@ async function main() {
     md += `### ${medals[i]} ${repoName(t.r)}\n\n`;
     if (desc) md += `> ${desc}\n\n`;
     md += `${meta.filter(Boolean).join(" · ")}\n\n`;
-    const work = [...new Set(t.messages)].slice(0, MAX_MESSAGES);
-    if (work.length) md += `**Recent work:**\n${work.map((m) => `- ${m}`).join("\n")}\n\n`;
+    const work = [...t.modules.values()].sort((a, b) => b.commits - a.commits).slice(0, MAX_MODULES);
+    if (work.length) md += `**Worked on:** ${work.map((m) => m.label).join(" · ")}\n\n`;
   });
 
   if (months.length) {
