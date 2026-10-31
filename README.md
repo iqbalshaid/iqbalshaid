@@ -20,6 +20,51 @@
 </p>
 
 <!--PROJECTS:START-->
+## 🚀 What I've Been Working On
+
+_Last 3 months · auto-updated on 2026-10-31_
+
+### September 2026
+
+🔒 **iqbalshaid/BusinessAnalyzer_Backend** · 18 commits
+- Set GHCR_OWNER for dev deploy
+- Add comments to llm.py
+- local
+- likj
+- yml changes
+
+🔒 **botivate-os/frontend_botivate_os** · 4 commits
+- designation new page add,assets system is employment according to employee basis
+- some changes in ui and backend
+- ea-dashboard changes for styling
+- changes in autorocket
+
+🔒 **botivate-os/backend_botivate_os** · 3 commits
+- designation new page add,assets system is employment according to employee basis
+- some changes attendance,employee,leave
+- changes in autorocket
+
+### August 2026
+
+**[iqbalshaid/iqbalshaid](https://github.com/iqbalshaid/iqbalshaid)** · 3 commits
+- Update README.md
+- Update link to experiences in README.md
+
+**[iqbalshaid/Blinkit-clone](https://github.com/iqbalshaid/Blinkit-clone)** · 2 commits
+- Update handleSubmit to use payload for product data
+- Update subCategory schemas to use idOrObjectSchema
+- Update product schemas to use idOrObjectSchema and coerce
+- frontend and backend code of blinkit-clone
+
+### July 2026
+
+**[iqbalshaid/Shadow-AI-Discovery](https://github.com/iqbalshaid/Shadow-AI-Discovery)** · 7 commits
+- Update README.md
+- Add image to README for visual context
+- update frontend readme
+- add frontend source files
+- shadow AI Discovery project
+
 <!--PROJECTS:END-->
 
 <h3 align="left">Languages and Tools:</h3>
