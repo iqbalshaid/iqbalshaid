@@ -20,9 +20,9 @@
 </p>
 
 <!--PROJECTS:START-->
-## 🚀 What I've Been Working On
+## 🏆 My Top 3 Projects
 
-_Top projects from the last 3 months · auto-updated on 2026-10-31_
+_Where I've committed the most in the last 3 months · auto-updated on 2026-10-31_
 
 ### 🥇 🔒 **botivate-os/frontend_botivate_os**
 
@@ -63,8 +63,7 @@ _Top projects from the last 3 months · auto-updated on 2026-10-31_
 - yml changes
 - Update development environment variables
 
-<details>
-<summary>📅 Month-by-month activity</summary>
+## 🚀 What I've Been Working On
 
 #### October 2026
 
@@ -82,8 +81,6 @@ _Top projects from the last 3 months · auto-updated on 2026-10-31_
 #### August 2026
 
 - **[iqbalshaid/Blinkit-clone](https://github.com/iqbalshaid/Blinkit-clone)** · 2 commits
-
-</details>
 
 <!--PROJECTS:END-->
 
