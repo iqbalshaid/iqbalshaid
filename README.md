@@ -26,27 +26,38 @@ _Where I've committed the most in the last 3 months · auto-updated on 2026-10-3
 
 ### 🥇 🔒 **botivate-os/frontend_botivate_os**
 
-Botivate OS is a modular business-operations ERP. On the Next.js + React + Redux + Tailwind frontend I build the Order-to-Dispatch, Production Planning and Lead-to-Order (enquiries, quotations, call tracking) modules, along with Inventory, SCOT reporting, Checklist & Delegation workflows, and role-based settings and designations.
-
 **Tech:** _TypeScript, JavaScript, Docker, Redux, Next.js, React, Tailwind_
 
 **Worked on:** Production Planning · Settings · Order to Dispatch · Lead to Order · Checklist & Delegation · Profile
 
-### 🥈 🔒 **botivate-os/backend_botivate_os**
+- Building **Botivate OS**, a modular business-operations ERP, with **Next.js**, **React**, **Redux** and **Tailwind CSS**.
+- Developed the **Order-to-Dispatch** and **Production Planning** modules end to end.
+- Built **Lead-to-Order** flows: enquiries, quotations, call tracking and a sales dashboard.
+- Added **Inventory**, **SCOT reporting** and **Checklist & Delegation** workflows.
+- Implemented role-based **settings, designations and permissions** screens.
 
-REST API behind Botivate OS, built with Node.js, Express, Prisma and PostgreSQL. I work on the order-to-dispatch and production-planning services (job cards, material returns, TAT tracking), lead-to-order sync, role-based permissions, inventory reorder alerts and WhatsApp campaign triggers.
+### 🥈 🔒 **botivate-os/backend_botivate_os**
 
 **Tech:** _TypeScript, HTML, Docker, GitHub Actions, AWS, Prisma, Express, Redis, PostgreSQL, Node.js_
 
 **Worked on:** Order to Dispatch · Production Planning · Permissions · Lead to Order · Inventory · WhatsApp
 
-### 🥉 🔒 **iqbalshaid/BusinessAnalyzer_Backend**
+- Building the **REST API** behind Botivate OS with **Node.js**, **Express**, **Prisma** and **PostgreSQL**.
+- Developed **order-to-dispatch** and **production-planning** services: job cards, material returns and TAT tracking.
+- Built **lead-to-order sync** and role-based **permissions** across modules.
+- Added **inventory reorder alerts** and **WhatsApp** campaign triggers.
 
-AI Research Copilot — a FastAPI backend running a LangGraph pipeline that researches companies and generates structured briefing reports, with live progress streaming (SSE) and persisted session state. Containerized with Docker Compose for local/dev/prod, shipped through GitHub Actions CI/CD to GHCR and AWS EC2, with a React + TypeScript + Vite frontend served behind Nginx.
+### 🥉 🔒 **iqbalshaid/BusinessAnalyzer_Backend**
 
 **Tech:** _Python, Docker, GitHub Actions, FastAPI, MySQL, LangGraph, LangChain_
 
 **Worked on:** API · Home · Session Detail · Workflow · Auth · Error Display
+
+- Built and deployed a **FastAPI** backend running a **LangGraph** pipeline that researches companies and generates structured briefing reports.
+- Streamed live progress to the UI with **SSE** and persisted session state across runs.
+- Containerized the service with **Docker** and multi-environment **Docker Compose** (local/dev/prod).
+- Set up **GitHub Actions** CI/CD: tests, Docker image build/push to **GHCR**, and deployment to **AWS EC2**.
+- Built the **React + TypeScript + Vite** frontend, served behind **Nginx**.
 
 ## 🚀 What I've Been Working On
 
