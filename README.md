@@ -5,7 +5,7 @@
 
 - 👨‍💻 All of my projects are available at [https://www.linkedin.com/in/md-shahid-iqbal-91b03b240/](https://www.linkedin.com/in/md-shahid-iqbal-91b03b240/)
 
-- 💬 Ask me about <!--ASK:START-->**AI / LLM Apps, Monitoring & Observability, Docker, TypeScript, GitHub Actions, React**<!--ASK:END-->
+- 💬 Ask me about <!--ASK:START-->**AI / LLM Apps, Monitoring & Observability, DevOps & CI/CD, TypeScript, React, Tailwind, JavaScript**<!--ASK:END-->
 
 - 📫 How to reach me **iqbalmdshahid147@gmail.com**
 
@@ -38,7 +38,7 @@ _Where I've committed the most in the last 3 months · auto-updated on 2026-10-3
 
 ### 🥈 🔒 **botivate-os/backend_botivate_os**
 
-**Tech:** _TypeScript, HTML, Docker, GitHub Actions, AWS, Prisma, Express, Redis, PostgreSQL, Node.js_
+**Tech:** _TypeScript, HTML, Docker, GitHub Actions, Nginx, Terraform, AWS, Prisma, BullMQ, Express, Redis, PostgreSQL, Socket.IO, Node.js_
 
 **Worked on:** Order to Dispatch · Production Planning · Permissions · Lead to Order · Inventory · WhatsApp
 
@@ -49,7 +49,7 @@ _Where I've committed the most in the last 3 months · auto-updated on 2026-10-3
 
 ### 🥉 🔒 **iqbalshaid/BusinessAnalyzer_Backend**
 
-**Tech:** _Python, Docker, GitHub Actions, FastAPI, MySQL, LangGraph, LangChain_
+**Tech:** _Python, Docker, GitHub Actions, FastAPI, MySQL, LangGraph, LangChain, GHCR_
 
 **Worked on:** API · Home · Session Detail · Workflow · Auth · Error Display
 
@@ -82,7 +82,12 @@ _Where I've committed the most in the last 3 months · auto-updated on 2026-10-3
 
 <!--TOOLS:START-->
 <h3 align="left">Languages and Tools:</h3>
-<p align="left"><img src="https://skillicons.dev/icons?i=docker,ts,githubactions,react,tailwind,js,redux,nextjs,express,nodejs,html,aws,prisma,redis,postgres,py&perline=12" alt="Docker, TypeScript, GitHub Actions, React, Tailwind, JavaScript, Redux, Next.js, Express, Node.js, HTML, AWS, Prisma, Redis, PostgreSQL, Python" /></p>
+<p align="left"><img src="https://skillicons.dev/icons?i=ts,react,tailwind,js,redux,nextjs,express,nodejs,html,prisma,redis,postgres,py,fastapi,mysql,vite&perline=12" alt="TypeScript, React, Tailwind, JavaScript, Redux, Next.js, Express, Node.js, HTML, Prisma, Redis, PostgreSQL, Python, FastAPI, MySQL, Vite" /></p>
+
+<p align="left"><b>DevOps &amp; Cloud:</b><br/>
+<img src="https://skillicons.dev/icons?i=docker,githubactions,nginx,terraform,aws,vercel&perline=12" alt="Docker, GitHub Actions, Nginx, Terraform, AWS, Vercel" /><br/>
+<img src="https://img.shields.io/badge/GHCR-181717?style=for-the-badge&logo=github&logoColor=white" alt="GHCR" />
+</p>
 
 <p align="left"><b>AI &amp; LLM:</b><br/>
 <img src="https://img.shields.io/badge/LangGraph-1C3C3C?style=for-the-badge&logo=langchain&logoColor=white" alt="LangGraph" />
@@ -91,6 +96,8 @@ _Where I've committed the most in the last 3 months · auto-updated on 2026-10-3
 </p>
 
 <p align="left"><b>Monitoring &amp; APIs:</b><br/>
+<img src="https://img.shields.io/badge/BullMQ-DC382D?style=for-the-badge&logo=redis&logoColor=white" alt="BullMQ" />
+<img src="https://img.shields.io/badge/Socket.IO-010101?style=for-the-badge&logo=socketdotio&logoColor=white" alt="Socket.IO" />
 <img src="https://img.shields.io/badge/OpenTelemetry-425CC7?style=for-the-badge&logo=opentelemetry&logoColor=white" alt="OpenTelemetry" />
 <img src="https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=black" alt="Swagger" />
 <img src="https://img.shields.io/badge/Grafana-F46800?style=for-the-badge&logo=grafana&logoColor=white" alt="Grafana" />
