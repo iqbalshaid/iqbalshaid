@@ -2,8 +2,14 @@ name: Monthly projects summary
 
 on:
   schedule:
-    - cron: "0 3 1 * *" # 1st of every month, 08:30 IST
+    - cron: "0 3 */2 * *" # every 2 days, 08:30 IST
   workflow_dispatch: # "Run workflow" button for manual runs
+  push: # re-run when the script or descriptions change
+    branches: [master]
+    paths:
+      - "scripts/**"
+      - "descriptions.json"
+      - ".github/workflows/monthly-projects.yml"
 
 permissions:
   contents: write
