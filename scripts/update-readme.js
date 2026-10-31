@@ -205,10 +205,11 @@ const WRITEUP_SCHEMA = {
   type: "object",
   properties: {
     title: { type: "string" },
+    summary: { type: "string" },
     tech: { type: "array", items: { type: "string" } },
     bullets: { type: "array", items: { type: "string" } },
   },
-  required: ["title", "tech", "bullets"],
+  required: ["title", "summary", "tech", "bullets"],
   additionalProperties: false,
 };
 
@@ -216,8 +217,11 @@ const WRITEUP_SYSTEM = `You write the project entries on a software developer's 
 
 For the project you are given, return:
 - title: a short product-style name, optionally followed by the repo's working name in parentheses, e.g. "AI Research Copilot (Business Analyzer)".
+- summary: 2-3 sentences (40-70 words) on what the product does, who it is for, and the developer's part in it.
 - tech: 6-14 technologies, most important first, using their usual names (e.g. "FastAPI", "LangGraph", "GitHub Actions", "AWS EC2").
-- bullets: 3-4 bullets. Each starts with a past-tense action verb (Built, Designed, Containerized, Implemented...), says what was built and how, and stays under 35 words. Wrap key technologies in **double asterisks**.
+- bullets: 4-5 bullets. Each starts with a past-tense action verb (Built, Designed, Containerized, Implemented...), says what was built, how, and why it matters, and stays under 45 words. Wrap key technologies in **double asterisks**.
+
+The developer's own description of the project, when given, is reliable context: keep its facts and expand on them.
 
 Describe only what the evidence supports: the developer's own commit messages, the files they changed, the modules they touched, and the repository's README and dependencies. Prefer the parts this developer worked on over the rest of the codebase. Do not invent metrics, users, or results.
 
@@ -376,12 +380,12 @@ async function main() {
   for (const [i, t] of top.entries()) {
     const custom = descriptions[t.r.nameWithOwner];
     const w = await writeupFor(t);
-    const meta = [`${t.count} commits`, `Active: ${[...t.months].reverse().join(", ")}`];
     const where = t.r.isPrivate ? `🔒 \`${t.r.nameWithOwner}\`` : `[\`${t.r.nameWithOwner}\`](${t.r.url})`;
 
     if (w) {
       md += `### ${medals[i]} ${w.title}\n\n`;
-      md += `${where} · ${meta.join(" · ")}\n\n`;
+      md += `${where}\n\n`;
+      if (w.summary) md += `${w.summary}\n\n`;
       md += `**Tech:** _${w.tech.join(", ")}_\n\n`;
       md += `${w.bullets.map((b) => `- ${b}`).join("\n")}\n\n`;
       continue;
@@ -389,8 +393,7 @@ async function main() {
     // No write-up yet (no API key / API error): name, description, detected tech and modules
     const desc = (custom && typeof custom === "object" ? custom.description : custom) || t.r.description;
     md += `### ${medals[i]} ${repoName(t.r)}\n\n`;
-    if (desc) md += `> ${desc}\n\n`;
-    md += `${meta.join(" · ")}\n\n`;
+    if (desc) md += `${desc}\n\n`;
     if (t.skills.size) md += `**Tech:** _${[...t.skills].map(nameOf).join(", ")}_\n\n`;
     const work = (custom && custom.features) || [...t.modules.values()].sort((a, b) => b.commits - a.commits).slice(0, MAX_MODULES).map((m) => m.label);
     if (work.length) md += `**Worked on:** ${work.join(" · ")}\n\n`;
