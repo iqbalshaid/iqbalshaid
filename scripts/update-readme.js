@@ -372,7 +372,7 @@ async function main() {
 
   // ---- PROJECTS ----
   const updated = now.toISOString().slice(0, 10);
-  let md = `\n## 🏆 My Top ${TOP} Projects\n\n_Where I've committed the most in the last ${MONTHS} months · auto-updated on ${updated}_\n\n`;
+  let md = `\n## 🏆 Top Projects\n\n_Where I've committed the most in the last ${MONTHS} months · auto-updated on ${updated}_\n\n`;
   if (!top.length) md += `_No commits in the last ${MONTHS} months._\n\n`;
 
   const medals = ["🥇", "🥈", "🥉"];
