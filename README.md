@@ -20,7 +20,7 @@
 </p>
 
 <!--PROJECTS:START-->
-## 🏆 My Top 3 Projects
+## 🏆 Top Projects
 
 _Where I've committed the most in the last 3 months · auto-updated on 2026-10-31_
 
