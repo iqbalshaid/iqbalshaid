@@ -46,7 +46,7 @@ _Where I've committed the most in the last 3 months · auto-updated on 2026-10-3
 
 `Python` · 19 commits · Active: Sep, Oct
 
-**Worked on:** Python Backend · Src · DEPLOYMENT · Nginx.conf
+**Worked on:** API · Home · Session Detail · Workflow · Auth · Error Display
 
 ## 🚀 What I've Been Working On
 
