@@ -159,11 +159,15 @@ function flatModuleOf(path) {
   return /[a-z]/i.test(seg) && !SKIP_FLAT.test(seg) && !SKIP_MODULES.test(seg) ? seg : null;
 }
 
-// Modules touched by my (non-merge) commits in a repo: key -> { label, commits }
+// My (non-merge) commits in a repo: modules touched (key -> { label, commits }), commit subjects, files changed
 async function workDone(repo, from, to) {
   const commits = await gh(
     `/repos/${repo}/commits?author=${login}&since=${from.toISOString()}&until=${to.toISOString()}&per_page=100`
   );
+  const messages = commits
+    .map((c) => c.commit.message.split("\n")[0].trim())
+    .filter((m) => m.length >= 8 && !/^(Merge |Auto update|Revert )/i.test(m));
+  const files = new Set();
   const modules = new Map();
   const flat = new Map();
   const count = (map, touched) => {
@@ -180,6 +184,7 @@ async function workDone(repo, from, to) {
     const touched = new Map();
     const touchedFlat = new Map();
     for (const f of detail.files) {
+      files.add(f.filename);
       for (const seg of modulesOf(f.filename)) touched.set(moduleKey(seg), seg);
       const seg = flatModuleOf(f.filename);
       if (seg) touchedFlat.set(moduleKey(seg), seg);
@@ -187,7 +192,80 @@ async function workDone(repo, from, to) {
     count(modules, touched);
     count(flat, touchedFlat);
   }
-  return modules.size ? modules : flat;
+  return { modules: modules.size ? modules : flat, messages, files };
+}
+
+// ---- Resume-style write-ups by Claude, cached in writeups.json ----
+// Regenerated only when a project got REFRESH_COMMITS new commits or the entry is REFRESH_DAYS old.
+const REFRESH_COMMITS = 5;
+const REFRESH_DAYS = 14;
+const writeups = readJson("writeups.json", {});
+
+const WRITEUP_SCHEMA = {
+  type: "object",
+  properties: {
+    title: { type: "string" },
+    tech: { type: "array", items: { type: "string" } },
+    bullets: { type: "array", items: { type: "string" } },
+  },
+  required: ["title", "tech", "bullets"],
+  additionalProperties: false,
+};
+
+const WRITEUP_SYSTEM = `You write the project entries on a software developer's public GitHub profile README, in the style of a strong resume.
+
+For the project you are given, return:
+- title: a short product-style name, optionally followed by the repo's working name in parentheses, e.g. "AI Research Copilot (Business Analyzer)".
+- tech: 6-14 technologies, most important first, using their usual names (e.g. "FastAPI", "LangGraph", "GitHub Actions", "AWS EC2").
+- bullets: 3-4 bullets. Each starts with a past-tense action verb (Built, Designed, Containerized, Implemented...), says what was built and how, and stays under 35 words. Wrap key technologies in **double asterisks**.
+
+Describe only what the evidence supports: the developer's own commit messages, the files they changed, the modules they touched, and the repository's README and dependencies. Prefer the parts this developer worked on over the rest of the codebase. Do not invent metrics, users, or results.
+
+This page is public and the repository may be a private company codebase, so stay at the level of features and architecture: never include secrets, environment values, internal URLs, hostnames, client or employee names.`;
+
+async function writeupFor(t) {
+  const key = t.r.nameWithOwner;
+  const cached = writeups[key];
+  const ageDays = cached ? (Date.now() - Date.parse(cached.generatedAt)) / 86400000 : Infinity;
+  if (cached && t.count - cached.commits < REFRESH_COMMITS && ageDays < REFRESH_DAYS) return cached;
+  if (!process.env.ANTHROPIC_API_KEY) return cached || null;
+
+  const branch = t.r.defaultBranchRef && t.r.defaultBranchRef.name;
+  const readme = (await tryGh(`/repos/${key}/readme${branch ? `?ref=${branch}` : ""}`, {}, "application/vnd.github.raw+json")) || "";
+  const custom = descriptions[key];
+  const evidence = [
+    `Repository: ${key}${t.r.isPrivate ? " (private)" : ""}`,
+    `Description: ${(custom && typeof custom === "object" ? custom.description : custom) || t.r.description || "(none)"}`,
+    `Languages: ${t.r.languages.edges.map((e) => e.node.name).join(", ")}`,
+    `Detected tools: ${[...t.skills].map(nameOf).join(", ")}`,
+    `My commits in the last ${MONTHS} months: ${t.count}`,
+    `Modules I touched (by commits): ${[...t.modules.values()].sort((a, b) => b.commits - a.commits).slice(0, 15).map((m) => `${m.label} (${m.commits})`).join(", ")}`,
+    `My commit messages:\n${[...new Set(t.messages)].slice(0, 80).map((m) => `- ${m}`).join("\n")}`,
+    `Files I changed:\n${[...t.files].slice(0, 250).join("\n")}`,
+    `Repository README:\n${readme.slice(0, 8000)}`,
+  ].join("\n\n");
+
+  try {
+    const Anthropic = require("@anthropic-ai/sdk").default;
+    const client = new Anthropic();
+    const response = await client.beta.messages.create({
+      model: "claude-opus-5-5",
+      max_tokens: 16000,
+      betas: ["server-side-fallback-2026-07-01"],
+      fallbacks: "default",
+      system: WRITEUP_SYSTEM,
+      messages: [{ role: "user", content: evidence }],
+      output_config: { effort: "medium", format: { type: "json_schema", schema: WRITEUP_SCHEMA } },
+    });
+    if (response.stop_reason !== "end_turn") throw new Error(`stop_reason ${response.stop_reason}`);
+    const text = response.content.filter((b) => b.type === "text").map((b) => b.text).join("");
+    const entry = { ...JSON.parse(text), commits: t.count, generatedAt: new Date().toISOString() };
+    writeups[key] = entry;
+    return entry;
+  } catch (err) {
+    console.error(`Write-up for ${key} failed, keeping the previous one:`, err.message);
+    return cached || null;
+  }
 }
 
 // Skills used in one repo: languages + dependencies + Docker/CI/infra files
@@ -264,18 +342,20 @@ async function main() {
     const label = from.toLocaleString("en-US", { month: "long", year: "numeric", timeZone: "UTC" });
     const short = from.toLocaleString("en-US", { month: "short", timeZone: "UTC" });
     const repos = await reposForMonth(from, to);
-    for (const c of repos) c.modules = await workDone(c.repository.nameWithOwner, from, to);
+    for (const c of repos) c.work = await workDone(c.repository.nameWithOwner, from, to);
     if (repos.length) months.push({ label, short, repos });
   }
 
   // Totals per project across all months
   const totals = new Map();
   for (const { short, repos } of months) {
-    for (const { repository: r, contributions, modules } of repos) {
-      const t = totals.get(r.nameWithOwner) || { r, count: 0, months: [], modules: new Map() };
+    for (const { repository: r, contributions, work } of repos) {
+      const t = totals.get(r.nameWithOwner) || { r, count: 0, months: [], modules: new Map(), messages: [], files: new Set() };
       t.count += contributions.totalCount;
       t.months.push(short);
-      for (const [key, m] of modules) {
+      t.messages.push(...work.messages);
+      for (const f of work.files) t.files.add(f);
+      for (const [key, m] of work.modules) {
         const prev = t.modules.get(key) || { label: m.label, commits: 0 };
         prev.commits += m.commits;
         t.modules.set(key, prev);
@@ -285,6 +365,7 @@ async function main() {
   }
   const ranked = [...totals.values()].sort((a, b) => b.count - a.count);
   const top = ranked.slice(0, TOP);
+  for (const t of ranked) t.skills = await detectSkills(t.r);
 
   // ---- PROJECTS ----
   const updated = now.toISOString().slice(0, 10);
@@ -292,16 +373,28 @@ async function main() {
   if (!top.length) md += `_No commits in the last ${MONTHS} months._\n\n`;
 
   const medals = ["🥇", "🥈", "🥉"];
-  top.forEach((t, i) => {
+  for (const [i, t] of top.entries()) {
     const custom = descriptions[t.r.nameWithOwner];
+    const w = await writeupFor(t);
+    const meta = [`${t.count} commits`, `Active: ${[...t.months].reverse().join(", ")}`];
+    const where = t.r.isPrivate ? `🔒 \`${t.r.nameWithOwner}\`` : `[\`${t.r.nameWithOwner}\`](${t.r.url})`;
+
+    if (w) {
+      md += `### ${medals[i]} ${w.title}\n\n`;
+      md += `${where} · ${meta.join(" · ")}\n\n`;
+      md += `**Tech:** _${w.tech.join(", ")}_\n\n`;
+      md += `${w.bullets.map((b) => `- ${b}`).join("\n")}\n\n`;
+      continue;
+    }
+    // No write-up yet (no API key / API error): name, description, detected tech and modules
     const desc = (custom && typeof custom === "object" ? custom.description : custom) || t.r.description;
-    const meta = [t.r.primaryLanguage && `\`${t.r.primaryLanguage.name}\``, `${t.count} commits`, `Active: ${[...t.months].reverse().join(", ")}`];
     md += `### ${medals[i]} ${repoName(t.r)}\n\n`;
     if (desc) md += `> ${desc}\n\n`;
-    md += `${meta.filter(Boolean).join(" · ")}\n\n`;
+    md += `${meta.join(" · ")}\n\n`;
+    if (t.skills.size) md += `**Tech:** _${[...t.skills].map(nameOf).join(", ")}_\n\n`;
     const work = (custom && custom.features) || [...t.modules.values()].sort((a, b) => b.commits - a.commits).slice(0, MAX_MODULES).map((m) => m.label);
     if (work.length) md += `**Worked on:** ${work.join(" · ")}\n\n`;
-  });
+  }
 
   if (months.length) {
     md += `## 🚀 What I've Been Working On\n\n`;
@@ -315,7 +408,7 @@ async function main() {
   // ---- TOOLS + ASK: skills weighted by commits in each repo ----
   const score = new Map();
   for (const t of ranked) {
-    for (const s of await detectSkills(t.r)) score.set(s, (score.get(s) || 0) + t.count);
+    for (const s of t.skills) score.set(s, (score.get(s) || 0) + t.count);
   }
   for (const s of ALWAYS) if (!score.has(s) && (SKILLS[s] || BADGES[s])) score.set(s, 0);
   const all = [...score.entries()].sort((a, b) => b[1] - a[1]).map(([s]) => s);
@@ -345,6 +438,7 @@ async function main() {
   }
 
   fs.writeFileSync("README.md", readme);
+  fs.writeFileSync("writeups.json", JSON.stringify(writeups, null, 2) + "\n");
 }
 
 main().catch((err) => {
