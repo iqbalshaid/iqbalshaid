@@ -51,30 +51,48 @@ async function workDone(repo, from, to) {
   return [...new Set(messages)].slice(0, MAX_MESSAGES);
 }
 
+const repoName = (r) => (r.isPrivate ? `🔒 **${r.nameWithOwner}**` : `**[${r.nameWithOwner}](${r.url})**`);
+
 async function main() {
   const now = new Date();
   let md = `## 🚀 What I've Been Working On\n\n_Last ${MONTHS} months · auto-updated on ${now.toISOString().slice(0, 10)}_\n\n`;
-  let anything = false;
 
+  const months = [];
   for (let i = 1; i <= MONTHS; i++) {
     const from = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - i, 1));
     const to = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - i + 1, 1) - 1);
     const label = from.toLocaleString("en-US", { month: "long", year: "numeric", timeZone: "UTC" });
-
     const repos = await reposForMonth(from, to);
-    if (!repos.length) continue;
-    anything = true;
+    if (repos.length) months.push({ from, to, label, repos });
+  }
 
+  if (!months.length) md += `_No commits in the last ${MONTHS} months._\n`;
+
+  // Top 3 projects by total commits across all months
+  const totals = new Map();
+  for (const { repos } of months) {
+    for (const { repository: r, contributions } of repos) {
+      const t = totals.get(r.nameWithOwner) || { r, count: 0 };
+      t.count += contributions.totalCount;
+      totals.set(r.nameWithOwner, t);
+    }
+  }
+  const top = [...totals.values()].sort((a, b) => b.count - a.count).slice(0, 3);
+  if (top.length) {
+    const medals = ["🥇", "🥈", "🥉"];
+    md += `### 🏆 Top ${top.length} Projects\n\n| | Project | Commits |\n|---|---|---|\n`;
+    top.forEach((t, i) => (md += `| ${medals[i]} | ${repoName(t.r)} | ${t.count} |\n`));
+    md += `\n`;
+  }
+
+  for (const { from, to, label, repos } of months) {
     md += `### ${label}\n\n`;
     for (const { repository: r, contributions } of repos) {
-      const name = r.isPrivate ? `🔒 **${r.nameWithOwner}**` : `**[${r.nameWithOwner}](${r.url})**`;
-      md += `${name} · ${contributions.totalCount} commits\n`;
+      md += `${repoName(r)} · ${contributions.totalCount} commits\n`;
       for (const m of await workDone(r.nameWithOwner, from, to)) md += `- ${m}\n`;
       md += `\n`;
     }
   }
-
-  if (!anything) md += `_No commits in the last ${MONTHS} months._\n`;
 
   const readme = fs.readFileSync("README.md", "utf8");
   const s = readme.indexOf(START);
