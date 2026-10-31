@@ -4,7 +4,8 @@
 //   ASK      -> "Ask me about" line built from the same detection
 // Runs inside GitHub Actions (see .github/workflows/monthly-projects.yml).
 // Custom project descriptions go in descriptions.json: { "owner/repo": "description" }
-//   or { "owner/repo": { "description": "...", "features": ["Feature A", "Feature B"] } } to fix the "Worked on" list
+//   or { "owner/repo": { "description": "...", "features": ["Feature A"], "bullets": ["Built ..."] } }
+//   features fix the "Worked on" list; bullets replace the AI-written ones
 // Tools to always show go in tools.json: { "always": ["aws", "langgraph", ...] } (ids from SKILLS / BADGES)
 const fs = require("fs");
 
@@ -205,11 +206,10 @@ const WRITEUP_SCHEMA = {
   type: "object",
   properties: {
     title: { type: "string" },
-    summary: { type: "string" },
     tech: { type: "array", items: { type: "string" } },
     bullets: { type: "array", items: { type: "string" } },
   },
-  required: ["title", "summary", "tech", "bullets"],
+  required: ["title", "tech", "bullets"],
   additionalProperties: false,
 };
 
@@ -217,7 +217,6 @@ const WRITEUP_SYSTEM = `You write the project entries on a software developer's 
 
 For the project you are given, return:
 - title: a short product-style name, optionally followed by the repo's working name in parentheses, e.g. "AI Research Copilot (Business Analyzer)".
-- summary: 2-3 sentences (40-70 words) on what the product does, who it is for, and the developer's part in it.
 - tech: 6-14 technologies, most important first, using their usual names (e.g. "FastAPI", "LangGraph", "GitHub Actions", "AWS EC2").
 - bullets: 4-5 bullets. Each starts with a past-tense action verb (Built, Designed, Containerized, Implemented...), says what was built, how, and why it matters, and stays under 45 words. Wrap key technologies in **double asterisks**.
 
@@ -239,7 +238,7 @@ async function writeupFor(t) {
   const custom = descriptions[key];
   const evidence = [
     `Repository: ${key}${t.r.isPrivate ? " (private)" : ""}`,
-    `Description: ${(custom && typeof custom === "object" ? custom.description : custom) || t.r.description || "(none)"}`,
+    `Description: ${(custom && typeof custom === "object" ? [custom.description, ...(custom.bullets || [])].filter(Boolean).join(" ") : custom) || t.r.description || "(none)"}`,
     `Languages: ${t.r.languages.edges.map((e) => e.node.name).join(", ")}`,
     `Detected tools: ${[...t.skills].map(nameOf).join(", ")}`,
     `My commits in the last ${MONTHS} months: ${t.count}`,
@@ -380,23 +379,17 @@ async function main() {
   for (const [i, t] of top.entries()) {
     const custom = descriptions[t.r.nameWithOwner];
     const w = await writeupFor(t);
-    const where = t.r.isPrivate ? `🔒 \`${t.r.nameWithOwner}\`` : `[\`${t.r.nameWithOwner}\`](${t.r.url})`;
+    const own = custom && typeof custom === "object" ? custom : { description: custom };
+    const work = own.features || [...t.modules.values()].sort((a, b) => b.commits - a.commits).slice(0, MAX_MODULES).map((m) => m.label);
+    // Bullets: my own from descriptions.json, else Claude's, else the description split into sentences
+    const desc = own.description || t.r.description;
+    const bullets = own.bullets || (w && w.bullets) || (desc ? desc.split(/(?<=\.)\s+/).filter(Boolean) : []);
+    const tech = (w && w.tech) || [...t.skills].map(nameOf);
 
-    if (w) {
-      md += `### ${medals[i]} ${w.title}\n\n`;
-      md += `${where}\n\n`;
-      if (w.summary) md += `${w.summary}\n\n`;
-      md += `**Tech:** _${w.tech.join(", ")}_\n\n`;
-      md += `${w.bullets.map((b) => `- ${b}`).join("\n")}\n\n`;
-      continue;
-    }
-    // No write-up yet (no API key / API error): name, description, detected tech and modules
-    const desc = (custom && typeof custom === "object" ? custom.description : custom) || t.r.description;
-    md += `### ${medals[i]} ${repoName(t.r)}\n\n`;
-    if (desc) md += `${desc}\n\n`;
-    if (t.skills.size) md += `**Tech:** _${[...t.skills].map(nameOf).join(", ")}_\n\n`;
-    const work = (custom && custom.features) || [...t.modules.values()].sort((a, b) => b.commits - a.commits).slice(0, MAX_MODULES).map((m) => m.label);
+    md += w ? `### ${medals[i]} ${w.title}\n\n${t.r.isPrivate ? "🔒 " : ""}\`${t.r.nameWithOwner}\`\n\n` : `### ${medals[i]} ${repoName(t.r)}\n\n`;
+    if (tech.length) md += `**Tech:** _${tech.join(", ")}_\n\n`;
     if (work.length) md += `**Worked on:** ${work.join(" · ")}\n\n`;
+    if (bullets.length) md += `${bullets.map((b) => `- ${b}`).join("\n")}\n\n`;
   }
 
   if (months.length) {
