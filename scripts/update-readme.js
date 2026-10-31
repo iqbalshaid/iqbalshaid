@@ -29,6 +29,8 @@ const SKILLS = {
   firebase: "Firebase", tailwind: "Tailwind", redux: "Redux", vite: "Vite", graphql: "GraphQL", jest: "Jest",
   fastapi: "FastAPI", django: "Django", flask: "Flask", tensorflow: "TensorFlow", pytorch: "PyTorch",
   sklearn: "scikit-learn", opencv: "OpenCV", docker: "Docker", githubactions: "GitHub Actions", aws: "AWS",
+  kubernetes: "Kubernetes", gcp: "Google Cloud", azure: "Azure", gitlab: "GitLab CI", jenkins: "Jenkins",
+  nginx: "Nginx", linux: "Linux", terraform: "Terraform", ansible: "Ansible", vercel: "Vercel", netlify: "Netlify",
 };
 // Tools skillicons.dev has no icon for -> shields.io badge: [name, color, simple-icons logo, logo color]
 const BADGES = {
@@ -40,9 +42,26 @@ const BADGES = {
   opentelemetry: ["OpenTelemetry", "425CC7", "opentelemetry"], grafana: ["Grafana", "F46800", "grafana"],
   prometheus: ["Prometheus", "E6522C", "prometheus"], sentry: ["Sentry", "362D59", "sentry"],
   swagger: ["Swagger", "85EA2D", "swagger", "black"],
+  // AI & LLM
+  crewai: ["CrewAI", "FF5A50"], autogen: ["AutoGen", "0078D4"], mistral: ["Mistral AI", "FA520F"],
+  cohere: ["Cohere", "39594D"], litellm: ["LiteLLM", "1E293B"], mcp: ["MCP", "000000"],
+  langsmith: ["LangSmith", "1C3C3C", "langchain"], langfuse: ["Langfuse", "0A60FF"], weaviate: ["Weaviate", "00C29A"],
+  milvus: ["Milvus", "00A1EA"], pgvector: ["pgvector", "336791", "postgresql"], streamlit: ["Streamlit", "FF4B4B", "streamlit"],
+  gradio: ["Gradio", "F97316"],
+  // Monitoring
+  jaeger: ["Jaeger", "66CFE3", null, "black"], datadog: ["Datadog", "632CA6", "datadog"], newrelic: ["New Relic", "1CE783", "newrelic", "black"],
+  loki: ["Loki", "F46800", "grafana"], elasticsearch: ["Elasticsearch", "005571", "elasticsearch"], kibana: ["Kibana", "005571", "kibana"],
+  // APIs & messaging
+  postman: ["Postman", "FF6C37", "postman"], openapi: ["OpenAPI", "6BA539", "openapiinitiative"], grpc: ["gRPC", "244C5A"],
+  socketio: ["Socket.IO", "010101", "socketdotio"], rabbitmq: ["RabbitMQ", "FF6600", "rabbitmq"], kafka: ["Kafka", "231F20", "apachekafka"],
+  celery: ["Celery", "37814A", "celery"], bullmq: ["BullMQ", "DC382D", "redis"],
+  // DevOps (no skillicons icon)
+  pm2: ["PM2", "2B037A", "pm2"], ghcr: ["GHCR", "181717", "github"],
 };
-const AI_TOOLS = ["langgraph", "langchain", "llamaindex", "openai", "anthropic", "gemini", "groq", "ollama", "huggingface", "chromadb", "pinecone", "qdrant", "faiss"];
-const MONITORING = ["opentelemetry", "grafana", "prometheus", "sentry"];
+const AI_TOOLS = ["langgraph", "langchain", "llamaindex", "openai", "anthropic", "gemini", "groq", "ollama", "huggingface", "chromadb", "pinecone", "qdrant", "faiss",
+  "crewai", "autogen", "mistral", "cohere", "litellm", "mcp", "langsmith", "langfuse", "weaviate", "milvus", "pgvector", "streamlit", "gradio"];
+const MONITORING = ["opentelemetry", "grafana", "prometheus", "sentry", "jaeger", "datadog", "newrelic", "loki", "elasticsearch", "kibana"];
+const DEVOPS = ["docker", "kubernetes", "aws", "gcp", "azure", "githubactions", "gitlab", "jenkins", "nginx", "linux", "terraform", "ansible", "vercel", "netlify", "pm2", "ghcr"];
 const nameOf = (id) => SKILLS[id] || (BADGES[id] && BADGES[id][0]) || id;
 const LANGS = {
   Python: "py", TypeScript: "ts", JavaScript: "js", HTML: "html", CSS: "css", SCSS: "sass", Shell: "bash",
@@ -68,6 +87,15 @@ const DEPS = {
   "prometheus-client": "prometheus", "prom-client": "prometheus", "sentry-sdk": "sentry",
   "swagger-ui-express": "swagger", "swagger-jsdoc": "swagger", "@nestjs/swagger": "swagger",
   "drf-yasg": "swagger", "drf-spectacular": "swagger", flasgger: "swagger",
+  crewai: "crewai", pyautogen: "autogen", "autogen-agentchat": "autogen", mistralai: "mistral", "@mistralai/mistralai": "mistral",
+  cohere: "cohere", "cohere-ai": "cohere", litellm: "litellm", mcp: "mcp", fastmcp: "mcp", "@modelcontextprotocol/sdk": "mcp",
+  langsmith: "langsmith", langfuse: "langfuse", "weaviate-client": "weaviate", pymilvus: "milvus", pgvector: "pgvector",
+  streamlit: "streamlit", gradio: "gradio", "sentence-transformers": "huggingface", "@huggingface/inference": "huggingface",
+  ddtrace: "datadog", "dd-trace": "datadog", newrelic: "newrelic", "jaeger-client": "jaeger",
+  elasticsearch: "elasticsearch", "@elastic/elasticsearch": "elasticsearch",
+  grpcio: "grpc", "@grpc/grpc-js": "grpc", "socket.io": "socketio", "python-socketio": "socketio",
+  pika: "rabbitmq", amqplib: "rabbitmq", kafkajs: "kafka", "kafka-python": "kafka", "confluent-kafka": "kafka",
+  celery: "celery", bullmq: "bullmq", bull: "bullmq", pm2: "pm2",
 };
 // Dependency families matched by prefix
 const DEP_RULES = [
@@ -79,6 +107,18 @@ const DEP_RULES = [
 const FILE_RULES = [
   [/grafana/i, "grafana"], [/prometheus/i, "prometheus"], [/opentelemetry|otel-collector|otel\/|OTEL_/i, "opentelemetry"],
   [/chromadb|chroma:/i, "chromadb"], [/aws-actions\/|amazonaws\.com|AWS_ACCESS_KEY/i, "aws"],
+  [/ghcr\.io/i, "ghcr"], [/nginx/i, "nginx"], [/jaegertracing/i, "jaeger"], [/grafana\/loki/i, "loki"],
+  [/elasticsearch/i, "elasticsearch"], [/kibana/i, "kibana"], [/rabbitmq/i, "rabbitmq"], [/kafka/i, "kafka"],
+  [/kubectl|azure\/k8s|helm /i, "kubernetes"], [/hashicorp\/setup-terraform/i, "terraform"],
+];
+// Tools spotted from file names alone
+const PATH_RULES = [
+  [/(^|\/)(k8s|kubernetes|helm)\/|(^|\/)Chart\.yaml$/i, "kubernetes"], [/\.tf$/, "terraform"], [/(^|\/)Jenkinsfile$/, "jenkins"],
+  [/nginx[^/]*\.conf$|(^|\/)nginx\//i, "nginx"], [/(^|\/)(ansible\.cfg|playbook[^/]*\.ya?ml)$/i, "ansible"],
+  [/(^|\/)vercel\.json$/, "vercel"], [/(^|\/)netlify\.toml$/, "netlify"], [/(^|\/)\.gitlab-ci\.yml$/, "gitlab"],
+  [/(^|\/)ecosystem\.config\.c?js$/, "pm2"], [/\.postman_collection\.json$/i, "postman"],
+  [/(^|\/)openapi\.(ya?ml|json)$/i, "openapi"], [/(^|\/)swagger\.(ya?ml|json)$/i, "swagger"],
+  [/(^|\/)prometheus\.ya?ml$/i, "prometheus"],
 ];
 const NODE_BACKEND = ["express", "nestjs"];
 
@@ -286,7 +326,7 @@ async function detectSkills(r) {
   if (paths.some((p) => /(^|\/)(Dockerfile|docker-compose\.ya?ml|compose\.ya?ml)$/.test(p))) skills.add("docker");
   if (paths.some((p) => p.startsWith(".github/workflows/"))) skills.add("githubactions");
   if (paths.some((p) => /(^|\/)(cdk\.json|serverless\.ya?ml|samconfig\.toml)$/.test(p))) skills.add("aws");
-  for (const p of paths) for (const [re, id] of FILE_RULES.slice(0, 3)) if (re.test(p)) skills.add(id);
+  for (const p of paths) for (const [re, id] of [...FILE_RULES.slice(0, 3), ...PATH_RULES]) if (re.test(p)) skills.add(id);
 
   const depFiles = paths.filter((p) => /(^|\/)(package\.json|requirements[^/]*\.txt|pyproject\.toml)$/.test(p)).slice(0, 8);
   const infraFiles = paths
@@ -408,8 +448,9 @@ async function main() {
   }
   for (const s of ALWAYS) if (!score.has(s) && (SKILLS[s] || BADGES[s])) score.set(s, 0);
   const all = [...score.entries()].sort((a, b) => b[1] - a[1]).map(([s]) => s);
-  const icons = all.filter((s) => SKILLS[s]).slice(0, MAX_TOOLS);
-  const badges = all.filter((s) => BADGES[s]);
+  const icons = all.filter((s) => SKILLS[s] && !DEVOPS.includes(s)).slice(0, MAX_TOOLS);
+  const devops = all.filter((s) => DEVOPS.includes(s));
+  const badges = all.filter((s) => BADGES[s] && !DEVOPS.includes(s));
 
   let readme = fs.readFileSync("README.md", "utf8");
   readme = replaceBlock(readme, "PROJECTS", md);
@@ -418,6 +459,14 @@ async function main() {
   if (all.length) {
     let tools = `\n<h3 align="left">Languages and Tools:</h3>\n`;
     if (icons.length) tools += `<p align="left"><img src="https://skillicons.dev/icons?i=${icons.join(",")}&perline=12" alt="${icons.map(nameOf).join(", ")}" /></p>\n\n`;
+    if (devops.length) {
+      const devIcons = devops.filter((s) => SKILLS[s]);
+      const devBadges = devops.filter((s) => BADGES[s]);
+      tools += `<p align="left"><b>DevOps &amp; Cloud:</b><br/>\n`;
+      if (devIcons.length) tools += `<img src="https://skillicons.dev/icons?i=${devIcons.join(",")}&perline=12" alt="${devIcons.map(nameOf).join(", ")}" /><br/>\n`;
+      if (devBadges.length) tools += `${devBadges.map(badge).join("\n")}\n`;
+      tools += `</p>\n\n`;
+    }
     const aiBadges = badges.filter((s) => AI_TOOLS.includes(s));
     const otherBadges = badges.filter((s) => !AI_TOOLS.includes(s));
     if (aiBadges.length) tools += `<p align="left"><b>AI &amp; LLM:</b><br/>\n${aiBadges.map(badge).join("\n")}\n</p>\n\n`;
@@ -428,7 +477,8 @@ async function main() {
     const areas = [
       ...(all.some((s) => AI_TOOLS.includes(s)) ? ["AI / LLM Apps"] : []),
       ...(all.some((s) => MONITORING.includes(s)) ? ["Monitoring & Observability"] : []),
-      ...all.filter((s) => score.get(s) > 0 && !AI_TOOLS.includes(s) && !MONITORING.includes(s)).slice(0, 4).map(nameOf),
+      ...(devops.some((s) => score.get(s) > 0) ? ["DevOps & CI/CD"] : []),
+      ...all.filter((s) => score.get(s) > 0 && ![...AI_TOOLS, ...MONITORING, ...DEVOPS].includes(s)).slice(0, 4).map(nameOf),
     ];
     readme = replaceBlock(readme, "ASK", `**${areas.join(", ")}**`);
   }
