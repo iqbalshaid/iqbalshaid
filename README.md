@@ -26,9 +26,7 @@ _Where I've committed the most in the last 3 months · auto-updated on 2026-10-3
 
 ### 🥇 🔒 **botivate-os/frontend_botivate_os**
 
-> Botivate OS frontend — HR & operations platform covering employees, attendance, leave, assets, designations and dashboards.
-
-32 commits · Active: Sep, Oct
+Botivate OS is a modular business-operations ERP. On the Next.js + React + Redux + Tailwind frontend I build the Order-to-Dispatch, Production Planning and Lead-to-Order (enquiries, quotations, call tracking) modules, along with Inventory, SCOT reporting, Checklist & Delegation workflows, and role-based settings and designations.
 
 **Tech:** _TypeScript, JavaScript, Docker, Redux, Next.js, React, Tailwind_
 
@@ -36,9 +34,7 @@ _Where I've committed the most in the last 3 months · auto-updated on 2026-10-3
 
 ### 🥈 🔒 **botivate-os/backend_botivate_os**
 
-> Botivate OS backend — APIs for employees, attendance, leave, assets and designations.
-
-26 commits · Active: Sep, Oct
+REST API behind Botivate OS, built with Node.js, Express, Prisma and PostgreSQL. I work on the order-to-dispatch and production-planning services (job cards, material returns, TAT tracking), lead-to-order sync, role-based permissions, inventory reorder alerts and WhatsApp campaign triggers.
 
 **Tech:** _TypeScript, HTML, Docker, GitHub Actions, AWS, Prisma, Express, Redis, PostgreSQL, Node.js_
 
@@ -46,9 +42,7 @@ _Where I've committed the most in the last 3 months · auto-updated on 2026-10-3
 
 ### 🥉 🔒 **iqbalshaid/BusinessAnalyzer_Backend**
 
-> Backend for an AI-powered business analyzer — Python LLM pipeline with containerized deployment.
-
-19 commits · Active: Sep, Oct
+AI Research Copilot — a FastAPI backend running a LangGraph pipeline that researches companies and generates structured briefing reports, with live progress streaming (SSE) and persisted session state. Containerized with Docker Compose for local/dev/prod, shipped through GitHub Actions CI/CD to GHCR and AWS EC2, with a React + TypeScript + Vite frontend served behind Nginx.
 
 **Tech:** _Python, Docker, GitHub Actions, FastAPI, MySQL, LangGraph, LangChain_
 
