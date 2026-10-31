@@ -5,7 +5,7 @@
 
 - 👨‍💻 All of my projects are available at [https://www.linkedin.com/in/md-shahid-iqbal-91b03b240/](https://www.linkedin.com/in/md-shahid-iqbal-91b03b240/)
 
-- 💬 Ask me about <!--ASK:START-->**AI / LLM Apps, Docker, TypeScript, GitHub Actions, React, Tailwind**<!--ASK:END-->
+- 💬 Ask me about <!--ASK:START-->**AI / LLM Apps, Monitoring & Observability, Docker, TypeScript, GitHub Actions, React**<!--ASK:END-->
 
 - 📫 How to reach me **iqbalmdshahid147@gmail.com**
 
@@ -89,7 +89,19 @@ _Top projects from the last 3 months · auto-updated on 2026-10-31_
 
 <!--TOOLS:START-->
 <h3 align="left">Languages and Tools:</h3>
-<p align="left"><img src="https://skillicons.dev/icons?i=docker,ts,githubactions,react,tailwind,js,redux,nextjs,express,nodejs,html,prisma,redis,postgres,py,fastapi&perline=12" alt="Docker, TypeScript, GitHub Actions, React, Tailwind, JavaScript, Redux, Next.js, Express, Node.js, HTML, Prisma, Redis, PostgreSQL, Python, FastAPI" /></p>
+<p align="left"><img src="https://skillicons.dev/icons?i=docker,ts,githubactions,react,tailwind,js,redux,nextjs,express,nodejs,html,aws,prisma,redis,postgres,py&perline=12" alt="Docker, TypeScript, GitHub Actions, React, Tailwind, JavaScript, Redux, Next.js, Express, Node.js, HTML, AWS, Prisma, Redis, PostgreSQL, Python" /></p>
+
+<p align="left"><b>AI &amp; LLM:</b><br/>
+<img src="https://img.shields.io/badge/LangGraph-1C3C3C?style=for-the-badge&logo=langchain&logoColor=white" alt="LangGraph" />
+<img src="https://img.shields.io/badge/LangChain-1C3C3C?style=for-the-badge&logo=langchain&logoColor=white" alt="LangChain" />
+<img src="https://img.shields.io/badge/ChromaDB-FF6446?style=for-the-badge" alt="ChromaDB" />
+</p>
+
+<p align="left"><b>Monitoring &amp; APIs:</b><br/>
+<img src="https://img.shields.io/badge/OpenTelemetry-425CC7?style=for-the-badge&logo=opentelemetry&logoColor=white" alt="OpenTelemetry" />
+<img src="https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=black" alt="Swagger" />
+<img src="https://img.shields.io/badge/Grafana-F46800?style=for-the-badge&logo=grafana&logoColor=white" alt="Grafana" />
+</p>
 
 <sub>Based on what I've used in the last 3 months</sub>
 <!--TOOLS:END-->
