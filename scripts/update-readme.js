@@ -219,8 +219,9 @@ async function main() {
   const top = ranked.slice(0, TOP);
 
   // ---- PROJECTS ----
-  let md = `\n## 🚀 What I've Been Working On\n\n_Top projects from the last ${MONTHS} months · auto-updated on ${now.toISOString().slice(0, 10)}_\n\n`;
-  if (!top.length) md += `_No commits in the last ${MONTHS} months._\n`;
+  const updated = now.toISOString().slice(0, 10);
+  let md = `\n## 🏆 My Top ${TOP} Projects\n\n_Where I've committed the most in the last ${MONTHS} months · auto-updated on ${updated}_\n\n`;
+  if (!top.length) md += `_No commits in the last ${MONTHS} months._\n\n`;
 
   const medals = ["🥇", "🥈", "🥉"];
   top.forEach((t, i) => {
@@ -234,13 +235,12 @@ async function main() {
   });
 
   if (months.length) {
-    md += `<details>\n<summary>📅 Month-by-month activity</summary>\n\n`;
+    md += `## 🚀 What I've Been Working On\n\n`;
     for (const { label, repos } of months) {
       md += `#### ${label}\n\n`;
       for (const { repository: r, contributions } of repos) md += `- ${repoName(r)} · ${contributions.totalCount} commits\n`;
       md += `\n`;
     }
-    md += `</details>\n\n`;
   }
 
   // ---- TOOLS + ASK: skills weighted by commits in each repo ----
