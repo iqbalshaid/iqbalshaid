@@ -30,7 +30,7 @@ _Where I've committed the most in the last 3 months · auto-updated on 2026-10-3
 
 `TypeScript` · 32 commits · Active: Sep, Oct
 
-**Worked on:** Production Planning · Settings · Order to Dispatch · Lead to Order · Checklist & Delegation · Profile
+**Worked on:** Production Planning · Settings · Order to Dispatch · Const · Lead to Order · Checklist & Delegation
 
 ### 🥈 🔒 **botivate-os/backend_botivate_os**
 
@@ -38,7 +38,7 @@ _Where I've committed the most in the last 3 months · auto-updated on 2026-10-3
 
 `TypeScript` · 26 commits · Active: Sep, Oct
 
-**Worked on:** Order to Dispatch · Production Planning · Permissions · Lead to Order · Inventory · WhatsApp
+**Worked on:** Order to Dispatch · Validators · Production Planning · Permissions · Lead to Order · Services
 
 ### 🥉 🔒 **iqbalshaid/BusinessAnalyzer_Backend**
 
