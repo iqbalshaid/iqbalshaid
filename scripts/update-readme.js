@@ -142,6 +142,11 @@ function modulesOf(path) {
     const seg = parts[i + 1];
     if (MODULE_PARENTS.test(parts[i]) && !seg.includes(".") && !SKIP_MODULES.test(seg)) found.add(seg);
   }
+  // Flat projects (e.g. app/llm.py, src/agents/x.py): use the first folder or file under src/app
+  if (!found.size && /^(src|app)$/i.test(parts[0]) && parts.length >= 2) {
+    const seg = parts.length > 2 ? parts[1] : parts[1].replace(/\.[^.]+$/, "");
+    if (!SKIP_MODULES.test(seg) && !/^(main|__init__|init|setup|conftest|app|server)$/i.test(seg)) found.add(seg);
+  }
   return found;
 }
 
