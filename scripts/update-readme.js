@@ -4,6 +4,7 @@
 //   ASK      -> "Ask me about" line built from the same detection
 // Runs inside GitHub Actions (see .github/workflows/monthly-projects.yml).
 // Custom project descriptions go in descriptions.json: { "owner/repo": "description" }
+//   or { "owner/repo": { "description": "...", "features": ["Feature A", "Feature B"] } } to fix the "Worked on" list
 // Tools to always show go in tools.json: { "always": ["aws", "langgraph", ...] } (ids from SKILLS / BADGES)
 const fs = require("fs");
 
@@ -146,10 +147,15 @@ function modulesOf(path) {
 }
 
 // For flat projects with no features/ or services/ folders: first folder or file name, e.g. llm.py -> "LLM"
-const SKIP_FLAT = /^(\..*|readme|dockerfile|requirements.*|package(-lock)?|docker-compose.*|compose|license|makefile|pyproject|poetry|tsconfig.*|.*config|env.*|main|__init__|init|setup|conftest|app|server|index|tests?|migrations?|scripts?|const(ants)?|static|public|docs?)$/i;
+const SKIP_FLAT = /^(\..*|.*\..*|readme|dockerfile|requirements.*|package(-lock)?|docker-compose.*|compose|license|makefile|pyproject|poetry|tsconfig.*|.*config|env.*|main|__init__|init|setup|conftest|app|server|index|tests?|migrations?|scripts?|const(ants)?|static|public|docs?|deploy(ment)?|infra|nginx|workflows|pages|services|tools|routes|models|schemas)$/i;
+const WRAPPERS = /^(src|app|backend|frontend|server|client|.+[-_](backend|frontend|server|app))$/i;
+const CONTAINERS = /^(pages|services|tools|agents|routes|controllers|views|screens|modules|features|api)$/i;
 function flatModuleOf(path) {
-  const parts = path.replace(/^(src|app|backend|frontend)\//i, "").split("/");
-  const seg = parts.length > 1 ? parts[0] : parts[0].replace(/\.[^.]+$/, "");
+  const parts = path.split("/");
+  while (parts.length > 1 && WRAPPERS.test(parts[0])) parts.shift();
+  if (parts.length > 1 && CONTAINERS.test(parts[0])) parts.shift();
+  let seg = parts[0];
+  if (parts.length === 1) seg = seg.replace(/\.[^.]+$/, "").replace(/[-_.]?(service|page|controller|tool|routes?)$/i, "");
   return /[a-z]/i.test(seg) && !SKIP_FLAT.test(seg) && !SKIP_MODULES.test(seg) ? seg : null;
 }
 
@@ -287,13 +293,14 @@ async function main() {
 
   const medals = ["🥇", "🥈", "🥉"];
   top.forEach((t, i) => {
-    const desc = descriptions[t.r.nameWithOwner] || t.r.description;
+    const custom = descriptions[t.r.nameWithOwner];
+    const desc = (custom && typeof custom === "object" ? custom.description : custom) || t.r.description;
     const meta = [t.r.primaryLanguage && `\`${t.r.primaryLanguage.name}\``, `${t.count} commits`, `Active: ${[...t.months].reverse().join(", ")}`];
     md += `### ${medals[i]} ${repoName(t.r)}\n\n`;
     if (desc) md += `> ${desc}\n\n`;
     md += `${meta.filter(Boolean).join(" · ")}\n\n`;
-    const work = [...t.modules.values()].sort((a, b) => b.commits - a.commits).slice(0, MAX_MODULES);
-    if (work.length) md += `**Worked on:** ${work.map((m) => m.label).join(" · ")}\n\n`;
+    const work = (custom && custom.features) || [...t.modules.values()].sort((a, b) => b.commits - a.commits).slice(0, MAX_MODULES).map((m) => m.label);
+    if (work.length) md += `**Worked on:** ${work.join(" · ")}\n\n`;
   });
 
   if (months.length) {
