@@ -142,12 +142,15 @@ function modulesOf(path) {
     const seg = parts[i + 1];
     if (MODULE_PARENTS.test(parts[i]) && !seg.includes(".") && !SKIP_MODULES.test(seg)) found.add(seg);
   }
-  // Flat projects (e.g. app/llm.py, src/agents/x.py): use the first folder or file under src/app
-  if (!found.size && /^(src|app)$/i.test(parts[0]) && parts.length >= 2) {
-    const seg = parts.length > 2 ? parts[1] : parts[1].replace(/\.[^.]+$/, "");
-    if (!SKIP_MODULES.test(seg) && !/^(main|__init__|init|setup|conftest|app|server)$/i.test(seg)) found.add(seg);
-  }
   return found;
+}
+
+// For flat projects with no features/ or services/ folders: first folder or file name, e.g. llm.py -> "LLM"
+const SKIP_FLAT = /^(\..*|readme|dockerfile|requirements.*|package(-lock)?|docker-compose.*|compose|license|makefile|pyproject|poetry|tsconfig.*|.*config|env.*|main|__init__|init|setup|conftest|app|server|index|tests?|migrations?|scripts?|const(ants)?|static|public|docs?)$/i;
+function flatModuleOf(path) {
+  const parts = path.replace(/^(src|app|backend|frontend)\//i, "").split("/");
+  const seg = parts.length > 1 ? parts[0] : parts[0].replace(/\.[^.]+$/, "");
+  return /[a-z]/i.test(seg) && !SKIP_FLAT.test(seg) && !SKIP_MODULES.test(seg) ? seg : null;
 }
 
 // Modules touched by my (non-merge) commits in a repo: key -> { label, commits }
@@ -156,19 +159,29 @@ async function workDone(repo, from, to) {
     `/repos/${repo}/commits?author=${login}&since=${from.toISOString()}&until=${to.toISOString()}&per_page=100`
   );
   const modules = new Map();
+  const flat = new Map();
+  const count = (map, touched) => {
+    for (const [key, seg] of touched) {
+      const m = map.get(key) || { label: moduleLabel(seg), commits: 0 };
+      m.commits += 1;
+      map.set(key, m);
+    }
+  };
   for (const c of commits) {
     if (c.parents && c.parents.length > 1) continue;
     const detail = await tryGh(`/repos/${repo}/commits/${c.sha}`);
     if (!detail || !detail.files) continue;
     const touched = new Map();
-    for (const f of detail.files) for (const seg of modulesOf(f.filename)) touched.set(moduleKey(seg), seg);
-    for (const [key, seg] of touched) {
-      const m = modules.get(key) || { label: moduleLabel(seg), commits: 0 };
-      m.commits += 1;
-      modules.set(key, m);
+    const touchedFlat = new Map();
+    for (const f of detail.files) {
+      for (const seg of modulesOf(f.filename)) touched.set(moduleKey(seg), seg);
+      const seg = flatModuleOf(f.filename);
+      if (seg) touchedFlat.set(moduleKey(seg), seg);
     }
+    count(modules, touched);
+    count(flat, touchedFlat);
   }
-  return modules;
+  return modules.size ? modules : flat;
 }
 
 // Skills used in one repo: languages + dependencies + Docker/CI/infra files
