@@ -22,7 +22,7 @@
 <!--PROJECTS:START-->
 ## 🏆 Top Projects
 
-_Where I've committed the most in the last 3 months · auto-updated on 2026-10-31_
+_Where I've committed the most in the last 3 months · auto-updated on 2026-11-01_
 
 ### 🥇 🔒 **botivate-os/frontend_botivate_os**
 
@@ -74,15 +74,11 @@ _Where I've committed the most in the last 3 months · auto-updated on 2026-10-3
 - 🔒 **botivate-os/frontend_botivate_os** · 4 commits
 - 🔒 **botivate-os/backend_botivate_os** · 3 commits
 
-#### August 2026
-
-- **[iqbalshaid/Blinkit-clone](https://github.com/iqbalshaid/Blinkit-clone)** · 2 commits
-
 <!--PROJECTS:END-->
 
 <!--TOOLS:START-->
 <h3 align="left">Languages and Tools:</h3>
-<p align="left"><img src="https://skillicons.dev/icons?i=ts,react,tailwind,js,redux,nextjs,express,nodejs,html,prisma,redis,postgres,py,fastapi,mysql,vite&perline=12" alt="TypeScript, React, Tailwind, JavaScript, Redux, Next.js, Express, Node.js, HTML, Prisma, Redis, PostgreSQL, Python, FastAPI, MySQL, Vite" /></p>
+<p align="left"><img src="https://skillicons.dev/icons?i=ts,react,tailwind,js,redux,nextjs,html,prisma,express,redis,postgres,nodejs,py,fastapi,mysql,vite&perline=12" alt="TypeScript, React, Tailwind, JavaScript, Redux, Next.js, HTML, Prisma, Express, Redis, PostgreSQL, Node.js, Python, FastAPI, MySQL, Vite" /></p>
 
 <p align="left"><b>DevOps &amp; Cloud:</b><br/>
 <img src="https://skillicons.dev/icons?i=docker,githubactions,nginx,terraform,aws,vercel&perline=12" alt="Docker, GitHub Actions, Nginx, Terraform, AWS, Vercel" /><br/>
