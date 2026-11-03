@@ -5,7 +5,7 @@
 
 - 👨‍💻 All of my projects are available at [https://www.linkedin.com/in/md-shahid-iqbal-91b03b240/](https://www.linkedin.com/in/md-shahid-iqbal-91b03b240/)
 
-- 💬 Ask me about <!--ASK:START-->**AI / LLM Apps, Monitoring & Observability, DevOps & CI/CD, TypeScript, React, Tailwind, JavaScript**<!--ASK:END-->
+- 💬 Ask me about <!--ASK:START-->**AI / LLM Apps, Monitoring & Observability, DevOps & CI/CD, TypeScript, MySQL, React, Tailwind**<!--ASK:END-->
 
 - 📫 How to reach me **iqbalmdshahid147@gmail.com**
 
@@ -22,7 +22,7 @@
 <!--PROJECTS:START-->
 ## 🏆 Top Projects
 
-_Where I've committed the most in the last 3 months · auto-updated on 2026-11-01_
+_Where I've committed the most in the last 3 months · auto-updated on 2026-11-03_
 
 ### 🥇 🔒 **botivate-os/frontend_botivate_os**
 
@@ -38,7 +38,7 @@ _Where I've committed the most in the last 3 months · auto-updated on 2026-11-0
 
 ### 🥈 🔒 **botivate-os/backend_botivate_os**
 
-**Tech:** _TypeScript, HTML, Docker, GitHub Actions, Nginx, Terraform, AWS, Prisma, BullMQ, Express, Redis, PostgreSQL, Socket.IO, Node.js_
+**Tech:** _TypeScript, HTML, Docker, GitHub Actions, Nginx, Terraform, MySQL, AWS, Prisma, BullMQ, Express, Redis, PostgreSQL, Socket.IO, Node.js_
 
 **Worked on:** Order to Dispatch · Production Planning · Permissions · Lead to Order · Inventory · WhatsApp
 
@@ -78,7 +78,7 @@ _Where I've committed the most in the last 3 months · auto-updated on 2026-11-0
 
 <!--TOOLS:START-->
 <h3 align="left">Languages and Tools:</h3>
-<p align="left"><img src="https://skillicons.dev/icons?i=ts,react,tailwind,js,redux,nextjs,html,prisma,express,redis,postgres,nodejs,py,fastapi,mysql,vite&perline=12" alt="TypeScript, React, Tailwind, JavaScript, Redux, Next.js, HTML, Prisma, Express, Redis, PostgreSQL, Node.js, Python, FastAPI, MySQL, Vite" /></p>
+<p align="left"><img src="https://skillicons.dev/icons?i=ts,mysql,react,tailwind,js,redux,nextjs,html,prisma,express,redis,postgres,nodejs,py,fastapi,vite&perline=12" alt="TypeScript, MySQL, React, Tailwind, JavaScript, Redux, Next.js, HTML, Prisma, Express, Redis, PostgreSQL, Node.js, Python, FastAPI, Vite" /></p>
 
 <p align="left"><b>DevOps &amp; Cloud:</b><br/>
 <img src="https://skillicons.dev/icons?i=docker,githubactions,nginx,terraform,aws,vercel&perline=12" alt="Docker, GitHub Actions, Nginx, Terraform, AWS, Vercel" /><br/>
