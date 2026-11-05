@@ -22,13 +22,13 @@
 <!--PROJECTS:START-->
 ## 🏆 Top Projects
 
-_Where I've committed the most in the last 3 months · auto-updated on 2026-11-03_
+_Where I've committed the most in the last 3 months · auto-updated on 2026-11-05_
 
 ### 🥇 🔒 **botivate-os/frontend_botivate_os**
 
 **Tech:** _TypeScript, JavaScript, Docker, Redux, Next.js, React, Tailwind_
 
-**Worked on:** Production Planning · Settings · Order to Dispatch · Lead to Order · Checklist & Delegation · Profile
+**Worked on:** Production Planning · Settings · Order to Dispatch · Checklist & Delegation · Doc Submanager · Profile
 
 - Building **Botivate OS**, a modular business-operations ERP, with **Next.js**, **React**, **Redux** and **Tailwind CSS**.
 - Developed the **Order-to-Dispatch** and **Production Planning** modules end to end.
@@ -40,7 +40,7 @@ _Where I've committed the most in the last 3 months · auto-updated on 2026-11-0
 
 **Tech:** _TypeScript, HTML, Docker, GitHub Actions, Nginx, Terraform, MySQL, AWS, Prisma, BullMQ, Express, Redis, PostgreSQL, Socket.IO, Node.js_
 
-**Worked on:** Order to Dispatch · Production Planning · Permissions · Lead to Order · Inventory · WhatsApp
+**Worked on:** Production Planning · Permissions · Order to Dispatch · Process Control · Lead to Order · Inventory
 
 - Building the **REST API** behind Botivate OS with **Node.js**, **Express**, **Prisma** and **PostgreSQL**.
 - Developed **order-to-dispatch** and **production-planning** services: job cards, material returns and TAT tracking.
@@ -60,6 +60,11 @@ _Where I've committed the most in the last 3 months · auto-updated on 2026-11-0
 - Built the **React + TypeScript + Vite** frontend, served behind **Nginx**.
 
 ## 🚀 What I've Been Working On
+
+#### November 2026
+
+- 🔒 **botivate-os/frontend_botivate_os** · 5 commits
+- 🔒 **botivate-os/backend_botivate_os** · 5 commits
 
 #### October 2026
 
