@@ -22,13 +22,13 @@
 <!--PROJECTS:START-->
 ## 🏆 Top Projects
 
-_Where I've committed the most in the last 3 months · auto-updated on 2026-11-09_
+_Where I've committed the most in the last 3 months · auto-updated on 2026-11-11_
 
 ### 🥇 🔒 **botivate-os/frontend_botivate_os**
 
 **Tech:** _TypeScript, JavaScript, Docker, Redux, Next.js, React, Tailwind_
 
-**Worked on:** Production Planning · Settings · Order to Dispatch · Checklist & Delegation · Doc Submanager · Profile
+**Worked on:** Production Planning · Settings · Order to Dispatch · Checklist & Delegation · Lead to Order · Doc Submanager
 
 - Building **Botivate OS**, a modular business-operations ERP, with **Next.js**, **React**, **Redux** and **Tailwind CSS**.
 - Developed the **Order-to-Dispatch** and **Production Planning** modules end to end.
@@ -40,7 +40,7 @@ _Where I've committed the most in the last 3 months · auto-updated on 2026-11-0
 
 **Tech:** _TypeScript, HTML, Docker, GitHub Actions, Nginx, Terraform, MySQL, AWS, Prisma, BullMQ, Express, Redis, PostgreSQL, Socket.IO, Node.js_
 
-**Worked on:** Order to Dispatch · Production Planning · Permissions · Process Control · Lead to Order · Inventory
+**Worked on:** Production Planning · Order to Dispatch · Permissions · Auth · Process Control · Lead to Order
 
 - Building the **REST API** behind Botivate OS with **Node.js**, **Express**, **Prisma** and **PostgreSQL**.
 - Developed **order-to-dispatch** and **production-planning** services: job cards, material returns and TAT tracking.
@@ -63,9 +63,9 @@ _Where I've committed the most in the last 3 months · auto-updated on 2026-11-0
 
 #### November 2026
 
-- 🔒 **botivate-os/frontend_botivate_os** · 6 commits
-- 🔒 **botivate-os/backend_botivate_os** · 6 commits
-- 🔒 **grolibinfo-ship-it/grolib-website** · 5 commits
+- 🔒 **botivate-os/backend_botivate_os** · 13 commits
+- 🔒 **botivate-os/frontend_botivate_os** · 10 commits
+- 🔒 **grolibinfo-ship-it/grolib-website** · 7 commits
 
 #### October 2026
 
