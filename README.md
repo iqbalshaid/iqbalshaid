@@ -22,11 +22,11 @@
 <!--PROJECTS:START-->
 ## 🏆 Top Projects
 
-_Where I've committed the most in the last 3 months · auto-updated on 2026-11-11_
+_Where I've committed the most in the last 3 months · auto-updated on 2026-11-13_
 
 ### 🥇 🔒 **botivate-os/frontend_botivate_os**
 
-**Tech:** _TypeScript, JavaScript, Docker, Redux, Next.js, React, Tailwind_
+**Tech:** _TypeScript, JavaScript, Docker, GitHub Actions, Nginx, Redux, Next.js, React, Tailwind, AWS_
 
 **Worked on:** Production Planning · Settings · Order to Dispatch · Checklist & Delegation · Lead to Order · Doc Submanager
 
@@ -87,7 +87,7 @@ _Where I've committed the most in the last 3 months · auto-updated on 2026-11-1
 <p align="left"><img src="https://skillicons.dev/icons?i=ts,mysql,react,js,tailwind,redux,nextjs,html,prisma,express,redis,postgres,nodejs,py,fastapi,vite&perline=12" alt="TypeScript, MySQL, React, JavaScript, Tailwind, Redux, Next.js, HTML, Prisma, Express, Redis, PostgreSQL, Node.js, Python, FastAPI, Vite" /></p>
 
 <p align="left"><b>DevOps &amp; Cloud:</b><br/>
-<img src="https://skillicons.dev/icons?i=docker,githubactions,nginx,terraform,aws,vercel&perline=12" alt="Docker, GitHub Actions, Nginx, Terraform, AWS, Vercel" /><br/>
+<img src="https://skillicons.dev/icons?i=docker,githubactions,nginx,aws,terraform,vercel&perline=12" alt="Docker, GitHub Actions, Nginx, AWS, Terraform, Vercel" /><br/>
 <img src="https://img.shields.io/badge/GHCR-181717?style=for-the-badge&logo=github&logoColor=white" alt="GHCR" />
 </p>
 
