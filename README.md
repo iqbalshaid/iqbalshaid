@@ -22,7 +22,7 @@
 <!--PROJECTS:START-->
 ## 🏆 Top Projects
 
-_Where I've committed the most in the last 3 months · auto-updated on 2026-11-13_
+_Where I've committed the most in the last 3 months · auto-updated on 2026-11-15_
 
 ### 🥇 🔒 **botivate-os/frontend_botivate_os**
 
@@ -66,6 +66,7 @@ _Where I've committed the most in the last 3 months · auto-updated on 2026-11-1
 - 🔒 **botivate-os/backend_botivate_os** · 13 commits
 - 🔒 **botivate-os/frontend_botivate_os** · 10 commits
 - 🔒 **grolibinfo-ship-it/grolib-website** · 7 commits
+- **[iqbalshaid/Pawan_dami](https://github.com/iqbalshaid/Pawan_dami)** · 4 commits
 
 #### October 2026
 
