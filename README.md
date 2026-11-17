@@ -5,7 +5,7 @@
 
 - 👨‍💻 All of my projects are available at [https://www.linkedin.com/in/md-shahid-iqbal-91b03b240/](https://www.linkedin.com/in/md-shahid-iqbal-91b03b240/)
 
-- 💬 Ask me about <!--ASK:START-->**AI / LLM Apps, Monitoring & Observability, DevOps & CI/CD, TypeScript, MySQL, React, JavaScript**<!--ASK:END-->
+- 💬 Ask me about <!--ASK:START-->**AI / LLM Apps, Monitoring & Observability, DevOps & CI/CD, TypeScript, React, MySQL, JavaScript**<!--ASK:END-->
 
 - 📫 How to reach me **iqbalmdshahid147@gmail.com**
 
@@ -22,7 +22,7 @@
 <!--PROJECTS:START-->
 ## 🏆 Top Projects
 
-_Where I've committed the most in the last 3 months · auto-updated on 2026-11-15_
+_Where I've committed the most in the last 3 months · auto-updated on 2026-11-17_
 
 ### 🥇 🔒 **botivate-os/frontend_botivate_os**
 
@@ -66,7 +66,7 @@ _Where I've committed the most in the last 3 months · auto-updated on 2026-11-1
 - 🔒 **botivate-os/backend_botivate_os** · 13 commits
 - 🔒 **botivate-os/frontend_botivate_os** · 10 commits
 - 🔒 **grolibinfo-ship-it/grolib-website** · 7 commits
-- **[iqbalshaid/Pawan_dami](https://github.com/iqbalshaid/Pawan_dami)** · 4 commits
+- **[iqbalshaid/Pawan_dami](https://github.com/iqbalshaid/Pawan_dami)** · 6 commits
 
 #### October 2026
 
@@ -85,7 +85,7 @@ _Where I've committed the most in the last 3 months · auto-updated on 2026-11-1
 
 <!--TOOLS:START-->
 <h3 align="left">Languages and Tools:</h3>
-<p align="left"><img src="https://skillicons.dev/icons?i=ts,mysql,react,js,tailwind,redux,nextjs,html,prisma,express,redis,postgres,nodejs,py,fastapi,vite&perline=12" alt="TypeScript, MySQL, React, JavaScript, Tailwind, Redux, Next.js, HTML, Prisma, Express, Redis, PostgreSQL, Node.js, Python, FastAPI, Vite" /></p>
+<p align="left"><img src="https://skillicons.dev/icons?i=ts,react,mysql,js,tailwind,redux,nextjs,html,prisma,express,redis,postgres,nodejs,py,fastapi,vite&perline=12" alt="TypeScript, React, MySQL, JavaScript, Tailwind, Redux, Next.js, HTML, Prisma, Express, Redis, PostgreSQL, Node.js, Python, FastAPI, Vite" /></p>
 
 <p align="left"><b>DevOps &amp; Cloud:</b><br/>
 <img src="https://skillicons.dev/icons?i=docker,githubactions,nginx,aws,terraform,vercel&perline=12" alt="Docker, GitHub Actions, Nginx, AWS, Terraform, Vercel" /><br/>
