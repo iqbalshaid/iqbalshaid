@@ -22,13 +22,13 @@
 <!--PROJECTS:START-->
 ## 🏆 Top Projects
 
-_Where I've committed the most in the last 3 months · auto-updated on 2026-11-19_
+_Where I've committed the most in the last 3 months · auto-updated on 2026-11-21_
 
 ### 🥇 🔒 **botivate-os/frontend_botivate_os**
 
 **Tech:** _TypeScript, JavaScript, Docker, GitHub Actions, Nginx, Redux, Next.js, React, Tailwind, AWS_
 
-**Worked on:** Production Planning · Order to Dispatch · Settings · Lead to Order · Checklist & Delegation · Purchase
+**Worked on:** Production Planning · Settings · Order to Dispatch · Lead to Order · Checklist & Delegation · Inventory System
 
 - Building **Botivate OS**, a modular business-operations ERP, with **Next.js**, **React**, **Redux** and **Tailwind CSS**.
 - Developed the **Order-to-Dispatch** and **Production Planning** modules end to end.
@@ -40,7 +40,7 @@ _Where I've committed the most in the last 3 months · auto-updated on 2026-11-1
 
 **Tech:** _TypeScript, HTML, Docker, GitHub Actions, Nginx, Terraform, MySQL, AWS, Prisma, BullMQ, Express, Redis, PostgreSQL, Socket.IO, Node.js_
 
-**Worked on:** Permissions · Order to Dispatch · Production Planning · Auth · Process Control · Lead to Order
+**Worked on:** Production Planning · Order to Dispatch · Permissions · Process Control · MIS · Auth
 
 - Building the **REST API** behind Botivate OS with **Node.js**, **Express**, **Prisma** and **PostgreSQL**.
 - Developed **order-to-dispatch** and **production-planning** services: job cards, material returns and TAT tracking.
@@ -63,8 +63,8 @@ _Where I've committed the most in the last 3 months · auto-updated on 2026-11-1
 
 #### November 2026
 
-- 🔒 **botivate-os/backend_botivate_os** · 16 commits
-- 🔒 **botivate-os/frontend_botivate_os** · 13 commits
+- 🔒 **botivate-os/backend_botivate_os** · 20 commits
+- 🔒 **botivate-os/frontend_botivate_os** · 17 commits
 - **[iqbalshaid/Pawan_dami](https://github.com/iqbalshaid/Pawan_dami)** · 7 commits
 - 🔒 **grolibinfo-ship-it/grolib-website** · 7 commits
 
